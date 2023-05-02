@@ -6,6 +6,10 @@ name = "pypi"
 [packages]
 
 [dev-packages]
+ruff = "*"
+black = "*"
+pre-commit = "*"
+mypy = "*"
 
 [requires]
 python_version = "3.9"

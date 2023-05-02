@@ -1,0 +1,29 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        stages: [commit]
+        name: ruff
+        entry: ruff
+        language: system
+        types: [python]
+        args: [--fix, --exit-non-zero-on-fix]
+  - repo: local
+    hooks:
+      - id: black
+        stages: [commit]
+        name: black
+        entry: black
+        language: system
+        types: [python]
+        files: .
+  - repo: local
+    hooks:
+      - id: mypy
+        stages: [commit]
+        name: mypy
+        entry: mypy
+        require_serial: true
+        language: system
+        types: [python]
+        files: .
