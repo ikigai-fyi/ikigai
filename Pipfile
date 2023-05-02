@@ -5,12 +5,15 @@ name = "pypi"
 
 [packages]
 stravalib = "*"
+flask = "*"
+flask-cors = "*"
 
 [dev-packages]
 ruff = "*"
 black = "*"
 pre-commit = "*"
 mypy = "*"
+types-flask-cors = "*"
 
 [requires]
 python_version = "3.9"
