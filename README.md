@@ -1,5 +1,7 @@
 # memories
 
+[![Main workflow](https://github.com/paulnicolet/memories/actions/workflows/main.yaml/badge.svg)](https://github.com/paulnicolet/memories/actions/workflows/main.yaml)
+
 ## Setting up the environment for development
 
 ### Create the .env file
