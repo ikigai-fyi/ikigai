@@ -1,0 +1,26 @@
+name: Python package
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    env:
+      APP_CONFIG: "sqlite_testing"
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+      - name: Install dependencies
+        run: |
+          pipenv sync --dev
+      - name: Run pre-commit
+        run: |
+          pipenv run pre-commit run --all-files
+      - name: Test with pytest
+        run: |
+          pytest
