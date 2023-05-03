@@ -19,6 +19,7 @@ pre-commit = "*"
 mypy = "*"
 types-flask-cors = "*"
 types-flask-migrate = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.9"
