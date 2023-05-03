@@ -24,4 +24,4 @@ jobs:
           pipenv run pre-commit run --all-files
       - name: Test with pytest
         run: |
-          pytest
+          pipenv run pytest
