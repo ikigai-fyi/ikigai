@@ -1,8 +1,16 @@
 from flask import Blueprint
 
+from app.models.athlete import Athlete
+
 rest = Blueprint("rest", __name__)
 
 
 @rest.get("/ping")
 def ep_ping():
-    return "pong"
+    return {"status": "ok"}
+
+
+@rest.get("/athletes")
+def ep_athletes():
+    athletes = Athlete.query.all()
+    return {"n_athletes": len(athletes)}

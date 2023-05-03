@@ -2,24 +2,41 @@
 
 ## Setting up the environment for development
 
-First setup the `.env` file
+### Create the .env file
 
-`touch .env`
+```
+cp .env.examples .env
+```
 
-`echo 'APP_CONFIG="local"' >> .env`
+### Run a Postgres instance
 
-`echo 'FLASK_APP="app:create_app()"' >> .env`
+The recommended way is using Docker:
 
-`echo 'FLASK_DEBUG=1' >> .env`
+```
+$ docker pull postgres:13
+$ docker run \
+    --name postgres \
+    -e POSTGRES_USER=admin \
+    -e POSTGRES_PASSWORD=admin \
+    -e POSTGRES_DB=memories \
+    -p 5432:5432 \
+    -d postgres:13
+```
 
-`echo 'FLASK_ENV=development' >> .env`
+Make sure to adjust the database URL in your .env:
 
-Then, run
+```
+SQLALCHEMY_DATABASE_URI="postgresql+psycopg://admin:admin@localhost:5432/memories"
+```
 
-`pipenv sync --dev`
+### Enable the virtual environment
 
-`pipenv shell`
+```
+pipenv sync --dev && pipenv shell
+```
 
-## Running the server
+### Running the server
 
-`flask run`
+```
+flask run
+```
