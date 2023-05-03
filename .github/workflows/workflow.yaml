@@ -17,6 +17,7 @@ jobs:
           python-version: "3.9"
       - name: Install dependencies
         run: |
+          pip install pipenv
           pipenv sync --dev
       - name: Run pre-commit
         run: |
