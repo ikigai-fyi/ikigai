@@ -35,7 +35,7 @@ jobs:
         run: pip install pipenv && pipenv sync
       - name: Update Zappa deployment
         run: |
-          - mkdir ~/.aws/
-          - printf "[profile icloud]\nregion=eu-west-1\noutput=json" > ~/.aws/config
+          mkdir ~/.aws/
+          printf "[profile icloud]\nregion=eu-west-1\noutput=json" > ~/.aws/config
           pipenv run flask db upgrade head
           pipenv run zappa update
