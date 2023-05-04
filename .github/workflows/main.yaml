@@ -40,16 +40,16 @@ jobs:
           mkdir ~/.aws/
           printf "[profile icloud]\nregion=eu-west-1\noutput=json" > ~/.aws/config
           printf "[icloud]\naws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID_PAUL }}\naws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY_PAUL }}" > ~/.aws/credentials
-      - name: Get Github action IP
+      - name: Get Github actions IP
         id: ip
         uses: haythem/public-ip@v1.3
-      - name: Add Github Actions IP to db security group
-        run: aws ec2 authorize-security-group-ingress --profile icloud --group-name allow-github-actions-ip --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+      - name: Add Github actions IP to db security group
+        run: aws ec2 authorize-security-group-ingress --profile icloud --group-name allow-github-actions-ip --protocol tcp --port 5432 --cidr ${{ steps.ip.outputs.ipv4 }}/32
       - name: Create Zappa configuration file
         run: envsubst < zappa_settings.template.json > zappa_settings.json
       - name: Apply database migrations
         run: pipenv run flask db upgrade head
       - name: Update Zappa deployment
         run: pipenv run zappa update dev
-      - name: Revoke Github Actions IP to db security group
-        run: aws ec2 revoke-security-group-ingress --group-name allow-github-actions-ip --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32 
+      - name: Revoke Github actions IP to db security group
+        run: aws ec2 revoke-security-group-ingress --group-name allow-github-actions-ip --protocol tcp --port 5432 --cidr ${{ steps.ip.outputs.ipv4 }}/32 
