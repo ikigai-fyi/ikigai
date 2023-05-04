@@ -49,7 +49,6 @@ def register_sentry(app: Flask):
         ],
         traces_sample_rate=0,
         environment=app.config.get("APP_ENV"),
-        debug=True,
     )
 
     sentry_sdk.serializer.MAX_DATABAG_BREADTH = 40
