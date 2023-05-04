@@ -17,6 +17,7 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     APP_ENV = "development"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
 
 
 class LocalConfig(Config):
