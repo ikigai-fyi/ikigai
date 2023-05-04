@@ -18,7 +18,9 @@
                 "subnet-0ba5024dcf99857f6",
                 "subnet-0f253c47e23c7a3c4"
             ],
-            "SecurityGroupIds": []
+            "SecurityGroupIds": [
+                "sg-06bd494055c8f8a99"
+            ]
         },
         "num_retained_versions": 3,
         "tags": {
