@@ -9,7 +9,8 @@
         "slim_handler": false,
         "keep_warm": false,
         "environment_variables": {
-            "APP_CONFIG": "development"
+            "APP_CONFIG": "dev",
+            "SQLALCHEMY_DATABASE_URI": "${SQLALCHEMY_DATABASE_URI}"
         },
         "num_retained_versions": 3,
         "tags": {

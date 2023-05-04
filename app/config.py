@@ -11,13 +11,12 @@ class Config(object):
     }
 
 
-class ProductionConfig(Config):
-    APP_ENV = "production"
+class ProdConfig(Config):
+    APP_ENV = "prod"
 
 
-class DevelopmentConfig(Config):
-    APP_ENV = "development"
-    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+class DevConfig(Config):
+    APP_ENV = "dev"
 
 
 class LocalConfig(Config):
@@ -35,8 +34,8 @@ class SQLiteTestingConfig(TestingConfig):
 
 
 CONFIGURATIONS = {
-    "development": DevelopmentConfig,
-    "production": ProductionConfig,
+    "dev": DevConfig,
+    "prod": ProdConfig,
     "local": LocalConfig,
     "testing": TestingConfig,
     "sqlite_testing": SQLiteTestingConfig,

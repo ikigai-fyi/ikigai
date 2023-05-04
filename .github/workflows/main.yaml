@@ -15,14 +15,18 @@ jobs:
         run: pip install pipenv && pipenv sync --dev
       - name: Run pre-commit
         run: pipenv run pre-commit run --all-files
+      - name: Run migrations
+        run: pipenv run flask db upgrade head
       - name: Run tests
         run: pipenv run pytest
   deploy-dev:
     runs-on: ubuntu-latest
     needs: [test]
     if: github.ref == 'refs/heads/main'
+    environment: dev
     env:
-      APP_CONFIG: "development"
+      APP_CONFIG: "dev"
+      SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.9
@@ -31,10 +35,14 @@ jobs:
           python-version: "3.9"
       - name: Setup pipenv
         run: pip install pipenv && pipenv sync
-      - name: Update Zappa deployment
+      - name: Create AWS configuration file
         run: |
           mkdir ~/.aws/
           printf "[profile icloud]\nregion=eu-west-1\noutput=json" > ~/.aws/config
           printf "[icloud]\naws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID_PAUL }}\naws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY_PAUL }}" > ~/.aws/credentials
+      - name: Create Zappa configuration file
+        run: envsubst < zappa_settings.template.json > zappa_settings.json
+      - name: Update Zappa deployment
+        run: |
           pipenv run flask db upgrade head
           pipenv run zappa update
