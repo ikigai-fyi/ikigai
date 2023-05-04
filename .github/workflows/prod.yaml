@@ -1,0 +1,37 @@
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-latest
+    environment: prod
+    env:
+      APP_CONFIG: "prod"
+      SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+      - name: Setup pipenv
+        run: pip install pipenv && pipenv sync
+      - name: Create AWS configuration file
+        run: |
+          mkdir ~/.aws/
+          printf "[profile icloud]\nregion=eu-west-1\noutput=json" > ~/.aws/config
+          printf "[icloud]\naws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID_PAUL }}\naws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY_PAUL }}" > ~/.aws/credentials
+      - name: Get Github actions IP
+        id: ip
+        uses: haythem/public-ip@v1.3
+      - name: Add Github actions IP to db security group
+        run: aws ec2 authorize-security-group-ingress --profile icloud --group-name allow-github-actions-ip --protocol tcp --port 5432 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+      - name: Create Zappa configuration file
+        run: envsubst < zappa_settings.template.json > zappa_settings.json
+      - name: Apply database migrations
+        run: pipenv run flask db upgrade head
+      - name: Update Zappa deployment
+        run: pipenv run zappa update prod
+      - name: Revoke Github actions IP to db security group
+        run: aws ec2 revoke-security-group-ingress --profile icloud --group-name allow-github-actions-ip --protocol tcp --port 5432 --cidr ${{ steps.ip.outputs.ipv4 }}/32 
