@@ -13,6 +13,7 @@ psycopg = {extras = ["binary", "pool"], version = "*"}
 shortuuid = "*"
 zappa = "*"
 boto3 = "==1.26.90" # Issue with latest boto3: https://stackoverflow.com/questions/75887656/botocore-package-in-lambda-python-3-9-runtime-return-error-cannot-import-name
+sentry-sdk = {extras = ["flask"], version = "*"}
 
 [dev-packages]
 ruff = "*"

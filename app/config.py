@@ -13,10 +13,12 @@ class Config(object):
 
 class ProdConfig(Config):
     APP_ENV = "prod"
+    SENTRY_DSN = os.getenv("SENTRY_DSN")
 
 
 class DevConfig(Config):
     APP_ENV = "dev"
+    SENTRY_DSN = os.getenv("SENTRY_DSN")
 
 
 class LocalConfig(Config):

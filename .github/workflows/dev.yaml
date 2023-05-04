@@ -30,6 +30,7 @@ jobs:
     env:
       APP_CONFIG: "dev"
       SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.9

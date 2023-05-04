@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6a0e4e1920d1386e02663c6f39b4ef537e6428680b0024843960260a9946fcd9"
+            "sha256": "916d36eb368542576d90206feb643418102c873e01fde6cda526127bb3c10a1d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -617,6 +617,17 @@
             "markers": "python_version >= '3.7'",
             "version": "==0.6.0"
         },
+        "sentry-sdk": {
+            "extras": [
+                "flask"
+            ],
+            "hashes": [
+                "sha256:092888f3abf7a2ea78f0bfcefc3e0465caee2b6f0efb26f538ccc60f95dca179",
+                "sha256:99c15556a23621be9f18c2955f7ce63321713bf1c0ad396b27b61399bac5f458"
+            ],
+            "index": "pypi",
+            "version": "==1.21.1"
+        },
         "shortuuid": {
             "hashes": [
                 "sha256:27ea8f28b1bd0bf8f15057a3ece57275d2059d2b0bb02854f02189962c13b6aa",
@@ -732,7 +743,7 @@
                 "sha256:8a388717b9476f934a21484e8c8e61875ab60644d29b9b39e11e4b9dc1c6b305",
                 "sha256:aa751d169e23c7479ce47a0cb0da579e3ede798f994f5816a74e4f4500dcea42"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5'",
+            "markers": "python_version >= '3.6'",
             "version": "==1.26.15"
         },
         "werkzeug": {

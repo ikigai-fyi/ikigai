@@ -1,8 +1,14 @@
 from flask_cors import CORS
+from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_sqlalchemy.model import Model
 from sqlalchemy import MetaData
+import sentry_sdk
+from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
+from sentry_sdk.integrations.flask import FlaskIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
+import logging
 
 
 class _BaseModel(Model):
@@ -26,6 +32,26 @@ class _BaseModel(Model):
 
         if commit:
             db.session.commit()
+
+
+def register_sentry(app: Flask):
+    sentry_logging = LoggingIntegration(
+        level=logging.INFO,  # Capture info and above as breadcrumbs
+        event_level=logging.WARNING,  # Send warnings & errors as events
+    )
+
+    sentry_sdk.init(
+        dsn=app.config.get("SENTRY_DSN"),
+        integrations=[
+            FlaskIntegration(),
+            AwsLambdaIntegration(timeout_warning=True),
+            sentry_logging,
+        ],
+        traces_sample_rate=0,
+        environment=app.config.get("APP_ENV"),
+    )
+
+    sentry_sdk.serializer.MAX_DATABAG_BREADTH = 40
 
 
 cors = CORS(origins="*", supports_credentials=True)
