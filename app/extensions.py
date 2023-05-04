@@ -40,6 +40,9 @@ def register_sentry(app: Flask):
         event_level=logging.WARNING,  # Send warnings & errors as events
     )
 
+    print("Registering Sentry")
+    print(app.config.get("SENTRY_DSN"))
+    print(app.config.get("APP_ENV"))
     sentry_sdk.init(
         dsn=app.config.get("SENTRY_DSN"),
         integrations=[
