@@ -48,7 +48,10 @@ jobs:
         id: ip
         uses: haythem/public-ip@v1.3
       - name: Add Github actions IP to db security group
-        run: aws ec2 authorize-security-group-ingress --profile icloud --group-name allow-github-actions-ip --protocol tcp --port 5432 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+        id: authorize_runner
+        run: |
+          aws ec2 authorize-security-group-ingress --profile icloud --group-name allow-github-actions-ip --protocol tcp --port 5432 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+          echo ::set-output name=exit_code::$?
       - name: Create Zappa configuration file
         run: envsubst < zappa_settings.template.json > zappa_settings.json
       - name: Apply database migrations
@@ -56,4 +59,5 @@ jobs:
       - name: Update Zappa deployment
         run: pipenv run zappa update dev
       - name: Revoke Github actions IP to db security group
+        if: steps.authorize_runner.outputs.exit_code == 0
         run: aws ec2 revoke-security-group-ingress --profile icloud --group-name allow-github-actions-ip --protocol tcp --port 5432 --cidr ${{ steps.ip.outputs.ipv4 }}/32 
