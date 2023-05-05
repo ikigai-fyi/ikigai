@@ -1,7 +1,6 @@
 # ikigai
 
 [![dev](https://github.com/paulnicolet/ikigai/actions/workflows/dev.yaml/badge.svg)](https://github.com/paulnicolet/ikigai/actions/workflows/dev.yaml)
-
 [![codecov](https://codecov.io/github/paulnicolet/ikigai/branch/main/graph/badge.svg?token=8VND8ZPWL9)](https://codecov.io/github/paulnicolet/ikigai)
 
 ## Setting up the environment for development
