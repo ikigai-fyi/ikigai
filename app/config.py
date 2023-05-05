@@ -3,12 +3,15 @@ import os
 
 class Config(object):
     SECRET_KEY = os.getenv("SECRET_KEY")
-    MY_ACCESS_TOKEN = os.getenv("MY_ACCESS_TOKEN")
+
     SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI")
     SQLALCHEMY_ENGINE_OPTIONS = {
         # AWS RDS configured with connect_timeout=3600
         "pool_recycle": 3000,
     }
+
+    STRAVA_CLIENT_ID = 106696
+    STRAVA_CLIENT_SECRET = os.getenv("STRAVA_CLIENT_SECRET")
 
 
 class ProdConfig(Config):
@@ -19,14 +22,18 @@ class ProdConfig(Config):
 class DevConfig(Config):
     APP_ENV = "dev"
     SENTRY_DSN = os.getenv("SENTRY_DSN")
+    STRAVA_PAUL_REFRESH_TOKEN = os.getenv("STRAVA_PAUL_REFRESH_TOKEN")
 
 
 class LocalConfig(Config):
     APP_ENV = "local"
+    STRAVA_PAUL_REFRESH_TOKEN = os.getenv("STRAVA_PAUL_REFRESH_TOKEN")
 
 
 class TestingConfig(Config):
     APP_ENV = "testing"
+    STRAVA_CLIENT_SECRET = "strava_secret"
+    STRAVA_PAUL_REFRESH_TOKEN = "paul_refresh_token"
 
 
 class SQLiteTestingConfig(TestingConfig):
