@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c9bbaccd06a257429271c8a878f765d21f57e696b61b8c01d104bc4bb24c1cba"
+            "sha256": "51b4d1117bcf7e0a35c7250697db6249a7fde7082d61496d2b0ba064f2a3919f"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -529,7 +529,7 @@
                 "sha256:ecbbc51391248116c0a055899e6c3e7ffbb11fb5e2a4cd6f2d0b93272118a209",
                 "sha256:f4a2b50e2b03d5776e7f21af73e2070e1b5c0d0df255a827e7c632962f8315af"
             ],
-            "markers": "python_version >= '3.7'",
+            "index": "pypi",
             "version": "==1.10.7"
         },
         "python-dateutil": {
@@ -622,11 +622,11 @@
                 "flask"
             ],
             "hashes": [
-                "sha256:092888f3abf7a2ea78f0bfcefc3e0465caee2b6f0efb26f538ccc60f95dca179",
-                "sha256:99c15556a23621be9f18c2955f7ce63321713bf1c0ad396b27b61399bac5f458"
+                "sha256:827fac0ed1c7921bd198727128a8aa890ad66242598aa18f4cdfa3e46bdd9a60",
+                "sha256:eb37b55ddfbbaf523dc91e59673caf10ab25e36cd4350ae71d19daa9c86506c7"
             ],
             "index": "pypi",
-            "version": "==1.21.1"
+            "version": "==1.22.0"
         },
         "shortuuid": {
             "hashes": [
@@ -643,6 +643,14 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==1.16.0"
+        },
+        "spectree": {
+            "hashes": [
+                "sha256:6f5128b11bc119e474fd4bda40470b28a83fdced653ade179fbc0461bdb09e22",
+                "sha256:fa74358f5b73d43341a38b6d03c93f80d56a77a67bb46769bd46b3b6e9f1d3df"
+            ],
+            "index": "pypi",
+            "version": "==1.1.2"
         },
         "sqlalchemy": {
             "hashes": [
@@ -743,7 +751,7 @@
                 "sha256:8a388717b9476f934a21484e8c8e61875ab60644d29b9b39e11e4b9dc1c6b305",
                 "sha256:aa751d169e23c7479ce47a0cb0da579e3ede798f994f5816a74e4f4500dcea42"
             ],
-            "markers": "python_version >= '3.6'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5'",
             "version": "==1.26.15"
         },
         "werkzeug": {

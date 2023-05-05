@@ -5,6 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_sqlalchemy.model import Model
 from sqlalchemy import MetaData
 import sentry_sdk
+from http import HTTPStatus
+from spectree import SpecTree
 from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
@@ -52,6 +54,19 @@ def register_sentry(app: Flask):
     )
 
     sentry_sdk.serializer.MAX_DATABAG_BREADTH = 40
+
+
+spectree = SpecTree(
+    "flask",
+    mode="strict",
+    path="docs",
+    annotations=True,
+    validation_error_status=HTTPStatus.BAD_REQUEST,
+)
+
+
+def register_spectree(app: Flask):
+    spectree.register(app)
 
 
 cors = CORS(origins="*", supports_credentials=True)
