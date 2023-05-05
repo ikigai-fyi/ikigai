@@ -59,7 +59,6 @@ def register_sentry(app: Flask):
 spectree = SpecTree(
     "flask",
     mode="strict",
-    path="docs",
     annotations=True,
     validation_error_status=HTTPStatus.BAD_REQUEST,
 )
