@@ -24,6 +24,7 @@ types-flask-cors = "*"
 types-flask-migrate = "*"
 pytest = "*"
 types-colorama = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.9"
