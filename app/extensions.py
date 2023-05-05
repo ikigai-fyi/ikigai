@@ -1,5 +1,4 @@
 import logging
-import os
 from http import HTTPStatus
 
 import sentry_sdk
@@ -61,9 +60,7 @@ def register_sentry(app: Flask):
 spectree = SpecTree(
     "flask",
     mode="strict",
-    # Hack because API Gateway is appending the env name to the URL
-    # until we setup a custom domain
-    path=f"{os.getenv('APP_CONFIG')}/docs",
+    path="docs",
     annotations=True,
     validation_error_status=HTTPStatus.BAD_REQUEST,
 )
