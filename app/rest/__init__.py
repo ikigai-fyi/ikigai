@@ -2,7 +2,10 @@ from flask import Blueprint
 
 from app.models.athlete import Athlete
 
+from .playground import playground
+
 rest = Blueprint("rest", __name__)
+rest.register_blueprint(playground)
 
 
 @rest.get("/ping")

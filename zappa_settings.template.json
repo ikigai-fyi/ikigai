@@ -11,7 +11,9 @@
         "environment_variables": {
             "APP_CONFIG": "dev",
             "SQLALCHEMY_DATABASE_URI": "${SQLALCHEMY_DATABASE_URI}",
-            "SENTRY_DSN": "${SENTRY_DSN}"
+            "SENTRY_DSN": "${SENTRY_DSN}",
+            "STRAVA_CLIENT_SECRET": "${STRAVA_CLIENT_SECRET}",
+            "STRAVA_PAUL_REFRESH_TOKEN": "${STRAVA_PAUL_REFRESH_TOKEN}"
         },
         "vpc_config": {
             "SubnetIds": [
@@ -48,7 +50,8 @@
         "environment_variables": {
             "APP_CONFIG": "prod",
             "SQLALCHEMY_DATABASE_URI": "${SQLALCHEMY_DATABASE_URI}",
-            "SENTRY_DSN": "${SENTRY_DSN}"
+            "SENTRY_DSN": "${SENTRY_DSN}",
+            "STRAVA_CLIENT_SECRET": "${STRAVA_CLIENT_SECRET}"
         },
         "vpc_config": {
             "SubnetIds": [
