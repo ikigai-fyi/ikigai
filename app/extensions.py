@@ -1,16 +1,18 @@
-from flask_cors import CORS
+import logging
+import os
+from http import HTTPStatus
+
+import sentry_sdk
 from flask import Flask
+from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_sqlalchemy.model import Model
-from sqlalchemy import MetaData
-import sentry_sdk
-from http import HTTPStatus
-from spectree import SpecTree
 from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
-import logging
+from spectree import SpecTree
+from sqlalchemy import MetaData
 
 
 class _BaseModel(Model):
@@ -59,6 +61,9 @@ def register_sentry(app: Flask):
 spectree = SpecTree(
     "flask",
     mode="strict",
+    # Hack because API Gateway is appending the env name to the URL
+    # until we setup a custom domain
+    path=f"{os.getenv('APP_CONFIG')}/docs",
     annotations=True,
     validation_error_status=HTTPStatus.BAD_REQUEST,
 )
