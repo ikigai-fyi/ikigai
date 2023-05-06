@@ -21,8 +21,7 @@
                 "subnet-0b4703c2ee0b2e84c"
             ],
             "SecurityGroupIds": [
-                "sg-06bd494055c8f8a99",
-                "sg-026e4294bb1e7ce2e"
+                "sg-0cac7f374f9c3aa4f"
             ]
         },
         "num_retained_versions": 3,
@@ -58,8 +57,7 @@
                 "subnet-0b4703c2ee0b2e84c"
             ],
             "SecurityGroupIds": [
-                "sg-06bd494055c8f8a99",
-                "sg-026e4294bb1e7ce2e"
+                "sg-0cac7f374f9c3aa4f"
             ]
         },
         "num_retained_versions": 3,
