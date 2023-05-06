@@ -2,7 +2,7 @@ from app.schemas.inputs.auth import StravaLoginInput
 from app.schemas.outputs.auth import StravaLoginOutput
 from stravalib import Client
 from flask import current_app
-
+from flask_jwt_extended import create_access_token
 from app.models.athlete import Athlete
 
 
@@ -24,4 +24,7 @@ def login_with_strava(input: StravaLoginInput) -> StravaLoginOutput:
         access_token, response["expires_at"], response["refresh_token"], input.scope
     )
 
-    return StravaLoginOutput(athlete=StravaLoginOutput.Athlete.from_orm(athlete))
+    return StravaLoginOutput(
+        athlete=StravaLoginOutput.Athlete.from_orm(athlete),
+        jwt=create_access_token(identity=athlete),
+    )

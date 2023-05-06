@@ -4,7 +4,7 @@ import os
 from flask import Flask
 
 from app.config import CONFIGURATIONS
-from app.extensions import cors, db, migrate, register_sentry, register_spectree
+from app.extensions import cors, db, jwt, migrate, register_sentry, register_spectree
 
 
 def register_extensions(app: Flask):
@@ -12,6 +12,7 @@ def register_extensions(app: Flask):
     cors.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
+    jwt.init_app(app)
     register_sentry(app)
     register_spectree(app)
 

@@ -16,6 +16,7 @@ boto3 = "==1.26.90" # Issue with latest boto3: https://stackoverflow.com/questio
 sentry-sdk = {extras = ["flask"], version = "*"}
 pydantic = "*"
 spectree = "*"
+flask-jwt-extended = "*"
 
 [dev-packages]
 ruff = "*"
