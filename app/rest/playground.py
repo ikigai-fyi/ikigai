@@ -1,11 +1,13 @@
 from flask import Blueprint, current_app
 
 from stravalib import Client
+from flask_jwt_extended import jwt_required
 
 playground = Blueprint("playground", __name__, url_prefix="/playground")
 
 
 @playground.get("/paul")
+@jwt_required()
 def ep_get_paul():
     client = Client()
     response = client.refresh_access_token(

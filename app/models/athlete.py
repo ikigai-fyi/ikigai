@@ -5,6 +5,7 @@ from datetime import datetime
 from stravalib.model import Athlete as StravaAthlete
 
 from app import db
+from app.extensions import jwt
 
 from .mixins.base import BaseModelMixin
 from .mixins.uuid import UUIDMixin
@@ -68,3 +69,14 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
             current_token.delete()
 
         return new_token
+
+
+@jwt.user_identity_loader
+def user_identity_lookup(athlete: Athlete):
+    return athlete.uuid
+
+
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_header, jwt_data):
+    identity = jwt_data["sub"]
+    return Athlete.query.filter_by(uuid=identity).one_or_none()

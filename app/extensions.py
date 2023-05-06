@@ -1,5 +1,6 @@
 import logging
 from http import HTTPStatus
+from flask_jwt_extended import JWTManager
 
 import sentry_sdk
 from flask import Flask
@@ -87,3 +88,4 @@ db = SQLAlchemy(
     model_class=_BaseModel, metadata=metadata, session_options={"autoflush": False}
 )
 migrate = Migrate()
+jwt = JWTManager()

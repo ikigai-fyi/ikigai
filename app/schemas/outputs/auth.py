@@ -12,3 +12,4 @@ class StravaLoginOutput(BaseModel):
         picture_url: str
 
     athlete: Athlete
+    jwt: str
