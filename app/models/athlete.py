@@ -1,7 +1,14 @@
+from __future__ import annotations
+
+from datetime import datetime
+
+from stravalib.model import Athlete as StravaAthlete
+
 from app import db
 
 from .mixins.base import BaseModelMixin
 from .mixins.uuid import UUIDMixin
+from .strava_token import StravaToken
 
 
 class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
@@ -19,3 +26,45 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     )
 
     strava_token = db.relationship("StravaToken", backref="athlete")
+
+    @classmethod
+    def update_or_create(cls, strava_athlete: StravaAthlete) -> Athlete:
+        athlete = Athlete.query.filter(
+            Athlete.strava_id == strava_athlete.id
+        ).one_or_none()
+
+        if not athlete:
+            athlete = Athlete()
+
+        athlete.first_name = strava_athlete.firstname
+        athlete.last_name = strava_athlete.lastname
+        athlete.picture_url = strava_athlete.profile
+        athlete.strava_id = strava_athlete.id
+        athlete.strava_raw = strava_athlete.json()
+        athlete.add()
+        db.session.commit()
+
+        return athlete
+
+    def update_strava_token(
+        self,
+        access_token: str,
+        expires_at_timestamp: float,
+        refresh_token: str,
+        scope: str,
+    ) -> StravaToken:
+        current_token = self.strava_token
+        new_token = StravaToken(
+            access_token=access_token,
+            expires_at=datetime.fromtimestamp(expires_at_timestamp),
+            refresh_token=refresh_token,
+            scope=scope,
+        ).add()
+
+        self.strava_token = new_token
+        self.update()
+
+        if current_token:
+            current_token.delete()
+
+        return new_token
