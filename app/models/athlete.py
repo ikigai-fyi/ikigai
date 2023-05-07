@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from sqlalchemy.orm import Mapped
 from stravalib.model import Athlete as StravaAthlete
 
 from app import db
@@ -26,7 +27,9 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
         db.Integer, db.ForeignKey("strava_token.id"), index=True
     )
 
-    strava_token = db.relationship("StravaToken", backref="athlete")
+    strava_token: Mapped[StravaToken] = db.relationship(
+        "StravaToken", backref="athlete"
+    )
 
     @classmethod
     def update_or_create(cls, strava_athlete: StravaAthlete) -> Athlete:
