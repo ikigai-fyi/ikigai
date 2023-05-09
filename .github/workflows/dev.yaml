@@ -58,7 +58,7 @@ jobs:
         id: authorize_runner
         run: |
           aws ec2 authorize-security-group-ingress --profile icloud --group-id sg-09604b54a891618b8 --protocol tcp --port 5432 --cidr ${{ steps.ip.outputs.ipv4 }}/32
-          echo ::set-output name=exit_code::$?
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
       - name: Create Zappa configuration file
         run: envsubst < zappa_settings.template.json > zappa_settings.json
       - name: Apply database migrations
@@ -66,5 +66,5 @@ jobs:
       - name: Update Zappa deployment
         run: pipenv run zappa update dev
       - name: Revoke Github actions IP to db security group
-        if: steps.authorize_runner.outputs.exit_code == 0
+        if: ${{ steps.authorize_runner.outputs.exit_code }} == 0
         run: aws ec2 revoke-security-group-ingress --profile icloud --group-id sg-09604b54a891618b8 --protocol tcp --port 5432 --cidr ${{ steps.ip.outputs.ipv4 }}/32 
