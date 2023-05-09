@@ -24,6 +24,8 @@
                 "sg-0cac7f374f9c3aa4f"
             ]
         },
+        "certificate_arn": "arn:aws:acm:us-east-1:692277471257:certificate/66148606-147a-4658-b44a-e81615d3f6fa",
+        "domain": "api-dev.ikigai.fyi",
         "num_retained_versions": 3,
         "tags": {
             "product": "ikigai",
