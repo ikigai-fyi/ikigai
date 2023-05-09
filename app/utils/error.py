@@ -7,3 +7,11 @@ class BaseError(Exception):
 
     def to_dict(self, lang: str = "en") -> dict:
         return {"type": self.__class__.__name__, "message": self.MESSAGE[lang]}
+
+
+class MissingStravaAuthenticationError(BaseError):
+    HTTP_STATUS = HTTPStatus.BAD_REQUEST
+    MESSAGE = {
+        "en": "Login with Strava to perform this action",
+        "fr": "Connection avec Strava nécessaire pour effectuer cette action",
+    }

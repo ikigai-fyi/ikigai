@@ -1,19 +1,17 @@
 import random
 
-from flask import abort
 from flask_jwt_extended import current_user
 from stravalib import Client, model
 
 from app.models.athlete import Athlete
 from app.schemas.outputs.activity import ActivityOutput
+from app.utils.error import MissingStravaAuthenticationError
 
 
 def get_random_activity() -> ActivityOutput:
     athlete: Athlete = current_user
-
-    # FIXME: handle in case user revoked Strava auth
     if not athlete.strava_token:
-        abort(400)
+        raise MissingStravaAuthenticationError
 
     athlete.strava_token.refresh_if_needed()
     client = Client(access_token=athlete.strava_token.access_token)

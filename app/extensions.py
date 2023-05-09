@@ -1,6 +1,7 @@
 import logging
 from http import HTTPStatus
 from flask_jwt_extended import JWTManager
+from werkzeug.exceptions import HTTPException
 from app.utils.error import BaseError
 import sentry_sdk
 from flask import Flask
@@ -76,10 +77,27 @@ def register_error_handler(app: Flask):
         # Log everything to Sentry for now
         sentry_sdk.capture_exception(e)
 
-        if not isinstance(e, BaseError):
-            e = BaseError()
+        if isinstance(e, BaseError):
+            return e.to_dict(), e.HTTP_STATUS
+        elif isinstance(e, HTTPException):
+            # werkzeug.exceptions.HTTPException are Flask/Werkzeug exception
+            # They are usually used by libraries
+            # Some helpful headers are automatically added by Werkzeug
+            # (eg allowed methods for 405 Method not allowed error, ...),
+            # but remove Content-Type which it sets to text/html instead of json
+            headers = {k: v for k, v in e.get_headers()}
+            headers.pop("Content-Type")
+            return (
+                {
+                    "type": f"HTTPException.{e.__class__.__name__}",
+                    "message": e.description,
+                },
+                e.code,
+                headers,
+            )
 
-        return e.to_dict(), e.HTTP_STATUS
+        default_error = BaseError()
+        return default_error.to_dict(), default_error.HTTP_STATUS
 
     app.register_error_handler(Exception, error_handler)
 
