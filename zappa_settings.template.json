@@ -13,8 +13,7 @@
             "JWT_SECRET_KEY": "${JWT_SECRET_KEY}",
             "SQLALCHEMY_DATABASE_URI": "${SQLALCHEMY_DATABASE_URI}",
             "SENTRY_DSN": "${SENTRY_DSN}",
-            "STRAVA_CLIENT_SECRET": "${STRAVA_CLIENT_SECRET}",
-            "STRAVA_PAUL_REFRESH_TOKEN": "${STRAVA_PAUL_REFRESH_TOKEN}"
+            "STRAVA_CLIENT_SECRET": "${STRAVA_CLIENT_SECRET}"
         },
         "vpc_config": {
             "SubnetIds": [
