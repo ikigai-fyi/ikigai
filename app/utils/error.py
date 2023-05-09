@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 
-class BaseError:
+class BaseError(Exception):
     HTTP_STATUS = HTTPStatus.INTERNAL_SERVER_ERROR
     MESSAGE = {"en": "An error occured", "fr": "Une erreur est survenue"}
 
