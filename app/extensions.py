@@ -74,10 +74,8 @@ def register_spectree(app: Flask):
 
 def register_error_handler(app: Flask):
     def error_handler(e):
-        # Log everything to Sentry for now
-        sentry_sdk.capture_exception(e)
-
         if isinstance(e, BaseError):
+            sentry_sdk.capture_exception(e)
             return e.to_dict(), e.HTTP_STATUS
         elif isinstance(e, HTTPException):
             # werkzeug.exceptions.HTTPException are Flask/Werkzeug exception
@@ -85,6 +83,9 @@ def register_error_handler(app: Flask):
             # Some helpful headers are automatically added by Werkzeug
             # (eg allowed methods for 405 Method not allowed error, ...),
             # but remove Content-Type which it sets to text/html instead of json
+            if e.code >= 500:
+                sentry_sdk.capture_exception(e)
+
             headers = {k: v for k, v in e.get_headers()}
             headers.pop("Content-Type")
             return (
@@ -96,6 +97,7 @@ def register_error_handler(app: Flask):
                 headers,
             )
 
+        sentry_sdk.capture_exception(e)
         default_error = BaseError()
         return default_error.to_dict(), default_error.HTTP_STATUS
 
