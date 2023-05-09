@@ -1,7 +1,7 @@
 import logging
 from http import HTTPStatus
 from flask_jwt_extended import JWTManager
-
+from app.utils.error import BaseError
 import sentry_sdk
 from flask import Flask
 from flask_cors import CORS
@@ -69,6 +69,19 @@ spectree = SpecTree(
 
 def register_spectree(app: Flask):
     spectree.register(app)
+
+
+def register_error_handler(app: Flask):
+    def error_handler(e):
+        # Log everything to Sentry for now
+        sentry_sdk.capture_exception(e)
+
+        if not isinstance(e, BaseError):
+            e = BaseError()
+
+        return e.to_dict(), e.HTTP_STATUS
+
+    app.register_error_handler(Exception, error_handler)
 
 
 cors = CORS(origins="*", supports_credentials=True)
