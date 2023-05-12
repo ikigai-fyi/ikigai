@@ -1,4 +1,5 @@
 import random
+from datetime import datetime
 
 from flask_jwt_extended import current_user
 from stravalib import Client, model
@@ -32,7 +33,7 @@ def get_random_activity() -> ActivityOutput:
         sport_type=activity.sport_type,
         picture_urls=picture_urls,
         elapsed_time_in_seconds=activity.elapsed_time.total_seconds(),
-        start_datetime=activity.start_date,
+        start_datetime=datetime.now(),  # FIXME
         polyline=activity.map.summary_polyline or None,
         distance_in_meters=activity.distance or None,
         total_elevation_gain_in_meters=activity.total_elevation_gain or None,
