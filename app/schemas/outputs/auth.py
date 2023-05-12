@@ -10,6 +10,7 @@ class StravaLoginOutput(BaseModel):
         first_name: str
         last_name: str
         picture_url: str
+        city: str = "Annecy"  # FIXME
 
     athlete: Athlete
     jwt: str

@@ -21,7 +21,13 @@ def get_random_activity() -> ActivityOutput:
 
     return ActivityOutput(
         name=activity.name,
-        polyline=activity.map.summary_polyline,
-        distance_in_meters=activity.distance,
+        city="Annecy",  # FIXME
+        sport_type=activity.sport_type,
+        picture_urls=[
+            "https://cdn.theatlantic.com/media/mt/science/cat_caviar.jpg"
+        ],  # FIXME
         elapsed_time_in_seconds=activity.elapsed_time.total_seconds(),
+        polyline=activity.map.summary_polyline or None,
+        distance_in_meters=activity.distance or None,
+        total_elevation_gain_in_meters=activity.total_elevation_gain or None,
     )

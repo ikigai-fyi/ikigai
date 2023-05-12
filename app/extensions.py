@@ -97,6 +97,9 @@ def register_error_handler(app: Flask):
                 headers,
             )
 
+        if app.config["APP_ENV"] == "local":
+            raise e
+
         sentry_sdk.capture_exception(e)
         default_error = BaseError()
         return default_error.to_dict(), default_error.HTTP_STATUS
