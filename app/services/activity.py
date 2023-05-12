@@ -22,7 +22,7 @@ def get_random_activity() -> ActivityOutput:
     picture_urls = [
         "https://cdn.theatlantic.com/media/mt/science/cat_caviar.jpg"
     ]  # FIXME
-    if activity.photo_count:
+    if activity.total_photo_count:
         detailed_activity = client.get_activity(activity.id)
         picture_urls = detailed_activity.photos.primary.urls["600"]
 
