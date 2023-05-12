@@ -13,6 +13,8 @@ class Config(object):
     STRAVA_CLIENT_ID = 106696
     STRAVA_CLIENT_SECRET = os.getenv("STRAVA_CLIENT_SECRET")
 
+    JWT_ACCESS_TOKEN_EXPIRES = False  # FIXME
+
 
 class ProdConfig(Config):
     APP_ENV = "prod"
