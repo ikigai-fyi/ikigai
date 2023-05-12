@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from datetime import datetime
 
 
 class ActivityOutput(BaseModel):
@@ -8,6 +9,7 @@ class ActivityOutput(BaseModel):
     sport_type: str
     picture_urls: list[str]
     elapsed_time_in_seconds: int
+    start_datetime: datetime
 
     polyline: Optional[str]
     distance_in_meters: Optional[int]
