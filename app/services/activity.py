@@ -19,18 +19,11 @@ def get_random_activity() -> ActivityOutput:
     activities = client.get_activities(limit=100)
     activity: model.Activity = random.choice(list(activities))
 
-    picture_urls = [
-        "https://cdn.theatlantic.com/media/mt/science/cat_caviar.jpg"
-    ]  # FIXME
-    if activity.total_photo_count:
-        detailed_activity = client.get_activity(activity.id)
-        picture_urls = detailed_activity.photos.primary.urls["600"]
-
     return ActivityOutput(
         name=activity.name,
         city="Annecy",  # FIXME
         sport_type=activity.sport_type,
-        picture_urls=picture_urls,
+        picture_urls=["https://picsum.photos/200"],
         elapsed_time_in_seconds=activity.elapsed_time.total_seconds(),
         polyline=activity.map.summary_polyline or None,
         distance_in_meters=activity.distance or None,
