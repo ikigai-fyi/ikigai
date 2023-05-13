@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 
 import sqlalchemy
@@ -109,9 +111,10 @@ def build_test_client_class(default_headers: dict):
             kwargs["headers"] = headers
             return super().open(*args, **kwargs)
 
-        def authenticate(self, athlete):
+        def authenticated(self, athlete) -> TestClient:
             jwt = create_access_token(athlete)
             self.default_headers = {**default_headers, "Authorization": f"Bearer {jwt}"}
+            return self
 
     return TestClient
 
