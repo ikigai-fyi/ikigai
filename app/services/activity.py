@@ -16,7 +16,7 @@ def get_random_activity() -> ActivityOutput:
     athlete.strava_token.refresh_if_needed()
     client = Client(access_token=athlete.strava_token.access_token)
 
-    activities: list[model.Activity] = list(client.get_activities(limit=30))
+    activities: list[model.Activity] = list(client.get_activities(limit=50))
     activities_with_picture = [
         activity for activity in activities if activity.total_photo_count
     ]
