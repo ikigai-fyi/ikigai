@@ -1,6 +1,5 @@
 import random
 
-import sentry_sdk
 from flask_jwt_extended import current_user
 from stravalib import Client, model
 
@@ -22,20 +21,7 @@ def get_random_activity() -> ActivityOutput:
         activity for activity in activities if activity.total_photo_count
     ]
     activity: model.Activity = random.choice(activities_with_picture)
-
-    try:
-        activity_raw = client.protocol.get(
-            "/activities/{id}",
-            id=activity.id,
-            include_all_efforts=False,
-        )
-        picture_urls = [activity_raw["photos"]["primary"]["urls"]["600"]]
-    except Exception as e:
-        # There is an issue with stravalib and Hike activities
-        # When fetching full, parsing is failing
-        sentry_sdk.capture_exception(e)
-        picture_urls = ["https://picsum.photos/200"]
-
+    picture_urls = _fetch_pictures(client, activity)
     return ActivityOutput(
         name=activity.name,
         city="Annecy",  # FIXME
@@ -47,3 +33,17 @@ def get_random_activity() -> ActivityOutput:
         distance_in_meters=activity.distance or None,
         total_elevation_gain_in_meters=activity.total_elevation_gain or None,
     )
+
+
+def _fetch_pictures(client: Client, activity: model.Activity) -> list[str]:
+    # When fetching full activities, stravalib might crash when parsing segments
+    # The models are generated from Strava OpenAPI specs: https://developers.strava.com/docs/reference/#api-models-SummarySegment
+    # It is said than activity_type can be Run or Bike
+    # But in practice it happens to also be Hike, Nordic, ...
+    # We bypass the response parsing for now
+    activity_raw = client.protocol.get(
+        "/activities/{id}",
+        id=activity.id,
+        include_all_efforts=False,
+    )
+    return [activity_raw["photos"]["primary"]["urls"]["600"]]
