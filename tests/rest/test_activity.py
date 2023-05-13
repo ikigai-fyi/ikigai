@@ -14,7 +14,7 @@ def test_get_random_activity(
     assert response.json == {
         "city": "Annecy",
         "distance_in_meters": 11361,
-        "elapsed_time_in_seconds": 14175,
+        "elapsed_time_in_seconds": 10348,
         "name": "Randonnée le matin",
         "picture_urls": [
             "https://dgtzuqphqg23d.cloudfront.net/b7G42pDWBelvNgJI1g7GKb1lnKuUB9DEUZ77IZF-qRs-768x576.jpg"

@@ -28,7 +28,7 @@ def get_random_activity() -> ActivityOutput:
         sport_type=activity.sport_type,
         picture_urls=picture_urls,
         start_datetime=activity.start_date.replace(tzinfo=None),
-        elapsed_time_in_seconds=activity.elapsed_time.total_seconds(),
+        elapsed_time_in_seconds=activity.moving_time.total_seconds(),
         polyline=activity.map.summary_polyline or None,
         distance_in_meters=activity.distance or None,
         total_elevation_gain_in_meters=activity.total_elevation_gain or None,
