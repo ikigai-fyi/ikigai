@@ -33,6 +33,7 @@ class LocalConfig(Config):
 class TestingConfig(Config):
     APP_ENV = "testing"
     STRAVA_CLIENT_SECRET = "strava_secret"
+    JWT_SECRET_KEY = "secret"
 
 
 class SQLiteTestingConfig(TestingConfig):
