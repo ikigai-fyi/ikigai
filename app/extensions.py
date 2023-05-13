@@ -97,7 +97,7 @@ def register_error_handler(app: Flask):
                 headers,
             )
 
-        if app.config["APP_ENV"] == "local":
+        if app.config["APP_ENV"] in {"local", "testing", "sqlite_testing"}:
             raise e
 
         sentry_sdk.capture_exception(e)

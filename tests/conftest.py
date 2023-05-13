@@ -6,6 +6,8 @@ from pytest import fixture
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
 
+from flask_jwt_extended import create_access_token
+
 from app import create_app
 from app.extensions import db as _db
 
@@ -100,5 +102,9 @@ def build_test_client_class(default_headers: dict):
                     headers[k] = v
             kwargs["headers"] = headers
             return super().open(*args, **kwargs)
+
+        def authenticate(self, athlete):
+            jwt = create_access_token(athlete)
+            self.default_headers = {**default_headers, "Authorization": f"Bearer {jwt}"}
 
     return TestClient
