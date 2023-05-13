@@ -2,11 +2,11 @@ import os
 
 import sqlalchemy
 from flask import current_app, testing
+from flask_jwt_extended import create_access_token
 from pytest import fixture
+from responses import RequestsMock
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
-
-from flask_jwt_extended import create_access_token
 
 from app import create_app
 from app.extensions import db as _db
@@ -89,6 +89,12 @@ def db_session(db):
     session.remove()
 
 
+@fixture(scope="function", autouse=True)
+def requests_mock():
+    with RequestsMock(assert_all_requests_are_fired=True) as requests_mock_obj:
+        yield requests_mock_obj
+
+
 def build_test_client_class(default_headers: dict):
     class TestClient(testing.FlaskClient):
         def __init__(self, *args, **kwargs) -> None:
@@ -108,3 +114,6 @@ def build_test_client_class(default_headers: dict):
             self.default_headers = {**default_headers, "Authorization": f"Bearer {jwt}"}
 
     return TestClient
+
+
+from .fixtures.strava import *  # noqa: E402, F403
