@@ -28,6 +28,8 @@ types-flask-migrate = "*"
 pytest = "*"
 types-colorama = "*"
 pytest-cov = "*"
+responses = "*"
+factory-boy = "*"
 
 [requires]
 python_version = "3.9"
