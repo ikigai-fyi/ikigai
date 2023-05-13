@@ -24,8 +24,12 @@ def get_random_activity() -> ActivityOutput:
     activity: model.Activity = random.choice(activities_with_picture)
 
     try:
-        activity = client.get_activity(activity.id)
-        picture_urls = [activity.photos.primary.urls["600"]]
+        activity_raw = client.protocol.get(
+            "/activities/{id}",
+            id=activity.id,
+            include_all_efforts=False,
+        )
+        picture_urls = [activity_raw["photos"]["primary"]["urls"]["600"]]
     except Exception as e:
         # There is an issue with stravalib and Hike activities
         # When fetching full, parsing is failing
