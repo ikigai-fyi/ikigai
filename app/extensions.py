@@ -1,11 +1,10 @@
 import logging
 from http import HTTPStatus
-from flask_jwt_extended import JWTManager
-from werkzeug.exceptions import HTTPException
-from app.utils.error import BaseError
+
 import sentry_sdk
 from flask import Flask
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_sqlalchemy.model import Model
@@ -14,6 +13,10 @@ from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
 from spectree import SpecTree
 from sqlalchemy import MetaData
+from werkzeug.exceptions import HTTPException
+
+from app.utils.error import BaseError
+from app.utils.json_encoder import JSONEncoder
 
 
 class _BaseModel(Model):
@@ -105,6 +108,10 @@ def register_error_handler(app: Flask):
         return default_error.to_dict(), default_error.HTTP_STATUS
 
     app.register_error_handler(Exception, error_handler)
+
+
+def register_custom_json_encoder(app: Flask):
+    app.json = JSONEncoder(app)
 
 
 cors = CORS(origins="*", supports_credentials=True)

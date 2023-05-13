@@ -12,4 +12,4 @@ activity = Blueprint("activity", __name__, url_prefix="/activities")
 @spectree.validate(resp=Response(HTTP_200=ActivityOutput))
 @jwt_required()
 def ep_get_random_activity():
-    return get_random_activity().dict()
+    return get_random_activity()

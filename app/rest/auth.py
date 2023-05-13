@@ -10,4 +10,4 @@ auth = Blueprint("auth", __name__, url_prefix="/auth")
 @auth.post("/login/strava")
 @spectree.validate(json=StravaLoginInput)
 def ep_strava_login(json: StravaLoginInput):
-    return login_with_strava(json).dict()
+    return login_with_strava(json)

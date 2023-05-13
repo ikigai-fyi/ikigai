@@ -24,6 +24,7 @@ def get_random_activity() -> ActivityOutput:
         city="Annecy",  # FIXME
         sport_type=activity.sport_type,
         picture_urls=["https://picsum.photos/200"],
+        start_datetime=activity.start_date.replace(tzinfo=None),
         elapsed_time_in_seconds=activity.elapsed_time.total_seconds(),
         polyline=activity.map.summary_polyline or None,
         distance_in_meters=activity.distance or None,
