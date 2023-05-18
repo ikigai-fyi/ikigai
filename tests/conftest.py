@@ -119,5 +119,4 @@ def build_test_client_class(default_headers: dict):
     return TestClient
 
 
-from .fixtures.nominatim import *  # noqa: E402, F403
 from .fixtures.strava import *  # noqa: E402, F403
