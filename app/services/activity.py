@@ -1,8 +1,8 @@
 import random
-
+from geopy.geocoders import Nominatim
 from flask_jwt_extended import current_user
 from stravalib import Client, model
-
+from typing import Optional
 from app.models.athlete import Athlete
 from app.schemas.outputs.activity import ActivityOutput
 from app.utils.error import MissingStravaAuthenticationError
@@ -22,9 +22,10 @@ def get_random_activity() -> ActivityOutput:
     ]
     activity: model.Activity = random.choice(activities_with_picture)
     picture_urls = _fetch_pictures(client, activity)
+    city = _get_city(activity.start_latlng.lat, activity.start_latlng.lon)
     return ActivityOutput(
         name=activity.name,
-        city="Annecy",  # FIXME
+        city=city,
         sport_type=activity.sport_type,
         picture_urls=picture_urls,
         start_datetime=activity.start_date.replace(tzinfo=None),
@@ -47,3 +48,10 @@ def _fetch_pictures(client: Client, activity: model.Activity) -> list[str]:
         include_all_efforts=False,
     )
     return [activity_raw["photos"]["primary"]["urls"]["600"]]
+
+
+def _get_city(latitude: float, longitude: float) -> Optional[str]:
+    geolocator = Nominatim(user_agent="fyi.ikigai")
+    location = geolocator.reverse((latitude, longitude), exactly_one=True)
+    address = location.raw["address"]
+    return address.get("city")
