@@ -17,7 +17,6 @@ sentry-sdk = {extras = ["flask"], version = "*"}
 pydantic = "*"
 spectree = "*"
 flask-jwt-extended = "*"
-geopy = "*"
 
 [dev-packages]
 ruff = "*"
