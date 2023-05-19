@@ -54,4 +54,4 @@ def _get_city(latitude: float, longitude: float) -> Optional[str]:
     geolocator = Nominatim(user_agent="fyi.ikigai")
     location = geolocator.reverse((latitude, longitude), exactly_one=True)
     address = location.raw["address"]
-    return address.get("city")
+    return address.get("city") or address.get("village")
