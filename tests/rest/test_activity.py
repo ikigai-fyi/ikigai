@@ -4,7 +4,10 @@ from tests.factory.athlete import AthleteFactory
 
 
 def test_get_random_activity(
-    client, get_activities_response_mock, get_activity_response_mock
+    client,
+    get_activities_response_mock,
+    get_activity_response_mock,
+    get_reverse_geocoding_mock,
 ):
     random.seed(42)
     athlete = AthleteFactory()
