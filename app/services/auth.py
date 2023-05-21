@@ -1,9 +1,11 @@
+from flask import current_app
+from flask_jwt_extended import create_access_token, current_user
+from stravalib import Client
+
+from app.models.athlete import Athlete
 from app.schemas.inputs.auth import StravaLoginInput
 from app.schemas.outputs.auth import StravaLoginOutput
-from stravalib import Client
-from flask import current_app
-from flask_jwt_extended import create_access_token
-from app.models.athlete import Athlete
+from app.utils.error import MissingStravaAuthenticationError
 
 
 def login_with_strava(input: StravaLoginInput) -> StravaLoginOutput:
@@ -28,3 +30,12 @@ def login_with_strava(input: StravaLoginInput) -> StravaLoginOutput:
         athlete=StravaLoginOutput.Athlete.from_orm(athlete),
         jwt=create_access_token(identity=athlete),
     )
+
+
+def get_logged_strava_client() -> Client:
+    athlete: Athlete = current_user
+    if not athlete.strava_token:
+        raise MissingStravaAuthenticationError
+
+    athlete.strava_token.refresh_if_needed()
+    return Client(access_token=athlete.strava_token.access_token)

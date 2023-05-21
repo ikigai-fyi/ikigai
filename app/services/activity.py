@@ -1,57 +1,48 @@
 import random
+
 from geopy.geocoders import Nominatim
-from flask_jwt_extended import current_user
-from stravalib import Client, model
-from typing import Optional
-from app.models.athlete import Athlete
+from stravalib.model import Activity as StravaActivity
+
+from app.models.activity import Activity
 from app.schemas.outputs.activity import ActivityOutput
-from app.utils.error import MissingStravaAuthenticationError
+
+from .auth import current_user, get_logged_strava_client
 
 
 def get_random_activity() -> ActivityOutput:
-    athlete: Athlete = current_user
-    if not athlete.strava_token:
-        raise MissingStravaAuthenticationError
-
-    athlete.strava_token.refresh_if_needed()
-    client = Client(access_token=athlete.strava_token.access_token)
-
-    activities: list[model.Activity] = list(client.get_activities(limit=50))
+    client = get_logged_strava_client()
+    activities: list[StravaActivity] = list(client.get_activities(limit=100))
     activities_with_picture = [
         activity for activity in activities if activity.total_photo_count
     ]
-    activity: model.Activity = random.choice(activities_with_picture)
-    picture_urls = _fetch_pictures(client, activity)
-    city = _get_city(activity.start_latlng.lat, activity.start_latlng.lon)
-    return ActivityOutput(
-        name=activity.name,
-        city=city,
-        sport_type=activity.sport_type,
-        picture_urls=picture_urls,
-        start_datetime=activity.start_date.replace(tzinfo=None),
-        elapsed_time_in_seconds=activity.moving_time.total_seconds(),
-        polyline=activity.map.summary_polyline or None,
-        distance_in_meters=activity.distance or None,
-        total_elevation_gain_in_meters=activity.total_elevation_gain or None,
-    )
+    strava_activity = random.choice(activities_with_picture)
+    activity = _fetch_and_store_activity(strava_activity.id)
+    return ActivityOutput.from_orm(activity)
 
 
-def _fetch_pictures(client: Client, activity: model.Activity) -> list[str]:
+def _fetch_and_store_activity(strava_id: int) -> Activity:
+    raw_activity = _fetch_raw_activity(strava_id)
+    city = _get_city(raw_activity)
+    return Activity.update_or_create_from_strava(raw_activity, city, current_user)
+
+
+def _fetch_raw_activity(strava_id: int) -> dict:
     # When fetching full activities, stravalib might crash when parsing segments
     # The models are generated from Strava OpenAPI specs: https://developers.strava.com/docs/reference/#api-models-SummarySegment
     # It is said than activity_type can be Run or Bike
     # But in practice it happens to also be Hike, Nordic, ...
     # We bypass the response parsing for now
-    activity_raw = client.protocol.get(
+    client = get_logged_strava_client()
+    return client.protocol.get(
         "/activities/{id}",
-        id=activity.id,
+        id=strava_id,
         include_all_efforts=False,
     )
-    return [activity_raw["photos"]["primary"]["urls"]["600"]]
 
 
-def _get_city(latitude: float, longitude: float) -> Optional[str]:
+def _get_city(strava_activity: dict) -> str:
+    lat, lon = strava_activity["start_latlng"][0], strava_activity["start_latlng"][1]
     geolocator = Nominatim(user_agent="fyi.ikigai")
-    location = geolocator.reverse((latitude, longitude), exactly_one=True)
+    location = geolocator.reverse((lat, lon), exactly_one=True)
     address = location.raw["address"]
-    return address.get("city") or address.get("village")
+    return address.get("city") or address["village"]
