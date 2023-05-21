@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Optional
 
 from sqlalchemy.orm import Mapped
 
@@ -33,3 +34,7 @@ class Activity(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
         db.Integer, db.ForeignKey("athlete.id"), index=True, nullable=False
     )
     athlete: Mapped[Athlete] = db.relationship("Athlete", backref="activities")
+
+    @classmethod
+    def get_by_strava_id(cls, strava_id: int) -> Optional[Activity]:
+        return Activity.query.filter_by(strava_id=strava_id).one_or_none()
