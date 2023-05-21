@@ -5,6 +5,7 @@ from typing import Optional
 
 from sqlalchemy.orm import Mapped
 
+from pydantic.datetime_parse import parse_datetime
 from app import db
 
 from .athlete import Athlete
@@ -38,3 +39,36 @@ class Activity(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     @classmethod
     def get_by_strava_id(cls, strava_id: int) -> Optional[Activity]:
         return Activity.query.filter_by(strava_id=strava_id).one_or_none()
+
+    @classmethod
+    def update_or_create_from_strava(
+        cls, strava_activity: dict, city: str, current_user: Athlete
+    ) -> Activity:
+        activity = cls.get_by_strava_id(strava_activity["id"])
+        if not activity:
+            activity = Activity()
+
+        picture_url = None
+        if primary := strava_activity["photos"]["primary"]:
+            picture_url = primary["urls"]["600"]
+
+        activity.name = strava_activity["name"]
+        activity.sport_type = strava_activity["sport_type"]
+        activity.elapsed_time_in_seconds = strava_activity["moving_time"]
+        activity.start_datetime = parse_datetime(strava_activity["start_date"]).replace(
+            tzinfo=None
+        )
+        activity.city = city
+        activity.picture_url = picture_url
+        activity.distance_in_meters = strava_activity["distance"] or None
+        activity.total_elevation_gain_in_meters = (
+            strava_activity["total_elevation_gain"] or None
+        )
+        activity.polyline = strava_activity["map"]["summary_polyline"] or None
+        activity.strava_id = strava_activity["id"]
+        activity.strava_raw = strava_activity
+        activity.athlete_id = current_user.id
+
+        activity.add()
+        db.session.commit()
+        return activity
