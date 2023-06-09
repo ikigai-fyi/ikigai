@@ -2,6 +2,7 @@ from flask import Blueprint, current_app, jsonify
 
 from app.extensions import spectree
 from app.schemas.inputs.webhook import StravaWebhookInput, StravaWebhookValidationInput
+from app.services.webhook import handle_strava_webhook
 from app.utils.error import UnauthorizedError
 
 webhook = Blueprint("webhook", __name__, url_prefix="/webhooks")
@@ -25,4 +26,5 @@ def ep_strava_webhook(json: StravaWebhookInput):
     if json.subscription_id != current_app.config["STRAVA_WEBHOOK_SUBSCRIPTION_ID"]:
         raise UnauthorizedError
 
+    handle_strava_webhook(json)
     return "ok"

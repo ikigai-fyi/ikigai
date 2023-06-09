@@ -7,6 +7,7 @@ from stravalib.model import Athlete as StravaAthlete
 
 from app import db
 from app.extensions import jwt
+from app.utils.error import AthleteNotFoundError
 
 from .mixins.base import BaseModelMixin
 from .mixins.uuid import UUIDMixin
@@ -30,6 +31,14 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     strava_token: Mapped[StravaToken] = db.relationship(
         "StravaToken", backref="athlete"
     )
+
+    @classmethod
+    def get_by_strava_id_or_404(cls, strava_id: int) -> Athlete:
+        athlete = Athlete.query.filter_by(strava_id=strava_id).one_or_none()
+        if not athlete:
+            raise AthleteNotFoundError
+
+        return athlete
 
     @classmethod
     def update_or_create(cls, strava_athlete: StravaAthlete) -> Athlete:

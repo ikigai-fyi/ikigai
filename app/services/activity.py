@@ -4,9 +4,10 @@ from geopy.geocoders import Nominatim
 from stravalib.model import Activity as StravaActivity
 
 from app.models.activity import Activity
+from app.models.athlete import Athlete
 from app.schemas.outputs.activity import ActivityOutput
 
-from .auth import current_user, get_logged_strava_client
+from .auth import current_user, get_logged_strava_client, get_strava_client
 
 
 def get_random_activity() -> ActivityOutput:
@@ -16,23 +17,23 @@ def get_random_activity() -> ActivityOutput:
         activity for activity in activities if activity.total_photo_count
     ]
     strava_activity = random.choice(activities_with_picture)
-    activity = _fetch_and_store_activity(strava_activity.id)
+    activity = fetch_and_store_activity(strava_activity.id, current_user)
     return ActivityOutput.from_orm(activity)
 
 
-def _fetch_and_store_activity(strava_id: int) -> Activity:
-    raw_activity = _fetch_raw_activity(strava_id)
+def fetch_and_store_activity(strava_id: int, athlete: Athlete) -> Activity:
+    raw_activity = _fetch_raw_activity(strava_id, athlete)
     city = _get_city(raw_activity)
-    return Activity.update_or_create_from_strava(raw_activity, city, current_user)
+    return Activity.update_or_create_from_strava(raw_activity, city, athlete.id)
 
 
-def _fetch_raw_activity(strava_id: int) -> dict:
+def _fetch_raw_activity(strava_id: int, athlete: Athlete) -> dict:
     # When fetching full activities, stravalib might crash when parsing segments
     # The models are generated from Strava OpenAPI specs: https://developers.strava.com/docs/reference/#api-models-SummarySegment
     # It is said than activity_type can be Run or Bike
     # But in practice it happens to also be Hike, Nordic, ...
     # We bypass the response parsing for now
-    client = get_logged_strava_client()
+    client = get_strava_client(athlete)
     return client.protocol.get(
         "/activities/{id}",
         id=strava_id,

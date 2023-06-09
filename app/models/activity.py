@@ -42,7 +42,7 @@ class Activity(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
 
     @classmethod
     def update_or_create_from_strava(
-        cls, strava_activity: dict, city: str, current_user: Athlete
+        cls, strava_activity: dict, city: str, athlete_id: int
     ) -> Activity:
         activity = cls.get_by_strava_id(strava_activity["id"])
         if not activity:
@@ -67,7 +67,7 @@ class Activity(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
         activity.polyline = strava_activity["map"]["summary_polyline"] or None
         activity.strava_id = strava_activity["id"]
         activity.strava_raw = strava_activity
-        activity.athlete_id = current_user.id
+        activity.athlete_id = athlete_id
 
         activity.add()
         db.session.commit()

@@ -32,10 +32,13 @@ def login_with_strava(input: StravaLoginInput) -> StravaLoginOutput:
     )
 
 
-def get_logged_strava_client() -> Client:
-    athlete: Athlete = current_user
+def get_strava_client(athlete: Athlete) -> Client:
     if not athlete.strava_token:
         raise MissingStravaAuthenticationError
 
     athlete.strava_token.refresh_if_needed()
     return Client(access_token=athlete.strava_token.access_token)
+
+
+def get_logged_strava_client() -> Client:
+    return get_strava_client(current_user)

@@ -29,3 +29,10 @@ class StravaWebhookInput(BaseModel):
 
     event_time: int
     updates: dict
+
+    @property
+    def is_create_activity(self) -> bool:
+        return (
+            self.object_type == StravaWebhookObjectType.ACTIVITY
+            and self.aspect_type == StravaWebhookAspectType.CREATE
+        )

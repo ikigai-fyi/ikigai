@@ -23,3 +23,11 @@ class UnauthorizedError(BaseError):
         "en": "Wrong credentials",
         "fr": "Mauvais identifiants",
     }
+
+
+class AthleteNotFoundError(BaseError):
+    HTTP_STATUS = HTTPStatus.NOT_FOUND
+    MESSAGE = {
+        "en": "Athlete not found",
+        "fr": "Athlete inconnu",
+    }

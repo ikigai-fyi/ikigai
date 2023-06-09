@@ -1,8 +1,9 @@
 import faker
 
+from tests.factory.athlete import AthleteFactory
 from tests.factory.strava_webhook import (
-    StravaWebhookInputFactory,
     StravaWebhookAspectType,
+    StravaWebhookInputFactory,
     StravaWebhookObjectType,
 )
 
@@ -37,11 +38,16 @@ def test_webhook_unauthorized(client, app):
     assert response.status_code == 401
 
 
-def test_webhook_create_activity(client, app):
+def test_webhook_create_activity(
+    client, app, get_activity_response_mock_run, get_reverse_geocoding_mock
+):
+    athlete = AthleteFactory()
     webhook_input = StravaWebhookInputFactory(
         object_type=StravaWebhookObjectType.ACTIVITY,
         aspect_type=StravaWebhookAspectType.CREATE,
-        subscription_id=1,
+        subscription_id=app.config["STRAVA_WEBHOOK_SUBSCRIPTION_ID"],
+        owner_id=athlete.strava_id,
+        object_id=9024223766,
     )
     response = client.post("/rest/webhooks/strava", json=webhook_input.dict())
     assert response.status_code == 200
