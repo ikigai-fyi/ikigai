@@ -14,7 +14,7 @@
             "SQLALCHEMY_DATABASE_URI": "${SQLALCHEMY_DATABASE_URI}",
             "SENTRY_DSN": "${SENTRY_DSN}",
             "STRAVA_CLIENT_SECRET": "${STRAVA_CLIENT_SECRET}",
-            "STRAVA_WEBHOOK_TOKEN": "${STRAVA_WEBHOOK_TOKEN}"
+            "STRAVA_WEBHOOK_VALIDATION_TOKEN": "${STRAVA_WEBHOOK_VALIDATION_TOKEN}"
         },
         "vpc_config": {
             "SubnetIds": [
@@ -53,7 +53,7 @@
             "SQLALCHEMY_DATABASE_URI": "${SQLALCHEMY_DATABASE_URI}",
             "SENTRY_DSN": "${SENTRY_DSN}",
             "STRAVA_CLIENT_SECRET": "${STRAVA_CLIENT_SECRET}",
-            "STRAVA_WEBHOOK_TOKEN": "${STRAVA_WEBHOOK_TOKEN}"
+            "STRAVA_WEBHOOK_VALIDATION_TOKEN": "${STRAVA_WEBHOOK_VALIDATION_TOKEN}"
         },
         "vpc_config": {
             "SubnetIds": [

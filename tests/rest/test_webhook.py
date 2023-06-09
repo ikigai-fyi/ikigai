@@ -12,7 +12,7 @@ def test_webhook_validation_unauthorized(client, app):
 
 def test_webhook_validation_ok(client, app):
     challenge = fake.pystr()
-    token = app.config["STRAVA_WEBHOOK_TOKEN"]
+    token = app.config["STRAVA_WEBHOOK_VALIDATION_TOKEN"]
     response = client.get(
         f"/rest/webhooks/strava?hub.verify_token={token}&hub.challenge={challenge}&hub.mode=subscribe"
     )
