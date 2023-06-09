@@ -10,7 +10,7 @@ def test_webhook_validation_unauthorized(client, app):
     assert response.status_code == 401
 
 
-def test_webhook_validation(client, app):
+def test_webhook_validation_ok(client, app):
     challenge = fake.pystr()
     token = app.config["STRAVA_WEBHOOK_TOKEN"]
     response = client.get(
