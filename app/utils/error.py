@@ -15,3 +15,11 @@ class MissingStravaAuthenticationError(BaseError):
         "en": "Login with Strava to perform this action",
         "fr": "Connection avec Strava nécessaire pour effectuer cette action",
     }
+
+
+class UnauthorizedError(BaseError):
+    HTTP_STATUS = HTTPStatus.UNAUTHORIZED
+    MESSAGE = {
+        "en": "Wrong credentials",
+        "fr": "Mauvais identifiants",
+    }

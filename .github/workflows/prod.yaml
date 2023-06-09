@@ -12,6 +12,7 @@ jobs:
       SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
       SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
+      STRAVA_WEBHOOK_TOKEN: ${{ secrets.STRAVA_WEBHOOK_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.9
@@ -41,4 +42,4 @@ jobs:
         run: pipenv run zappa update prod
       - name: Revoke Github actions IP to db security group
         if: ${{ steps.authorize_runner.outputs.exit_code }} == 0
-        run: aws ec2 revoke-security-group-ingress --profile icloud --group-id sg-09604b54a891618b8 --protocol tcp --port 5432 --cidr ${{ steps.ip.outputs.ipv4 }}/32 
+        run: aws ec2 revoke-security-group-ingress --profile icloud --group-id sg-09604b54a891618b8 --protocol tcp --port 5432 --cidr ${{ steps.ip.outputs.ipv4 }}/32

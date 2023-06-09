@@ -12,6 +12,7 @@ class Config(object):
 
     STRAVA_CLIENT_ID = 106696
     STRAVA_CLIENT_SECRET = os.getenv("STRAVA_CLIENT_SECRET")
+    STRAVA_WEBHOOK_TOKEN = os.getenv("STRAVA_WEBHOOK_TOKEN")
 
     JWT_ACCESS_TOKEN_EXPIRES = False  # FIXME
 
@@ -33,6 +34,7 @@ class LocalConfig(Config):
 class TestingConfig(Config):
     APP_ENV = "testing"
     STRAVA_CLIENT_SECRET = "strava_secret"
+    STRAVA_WEBHOOK_TOKEN = "strava_webhook_token"
     JWT_SECRET_KEY = "secret"
 
 

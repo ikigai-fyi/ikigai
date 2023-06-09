@@ -13,7 +13,8 @@
             "JWT_SECRET_KEY": "${JWT_SECRET_KEY}",
             "SQLALCHEMY_DATABASE_URI": "${SQLALCHEMY_DATABASE_URI}",
             "SENTRY_DSN": "${SENTRY_DSN}",
-            "STRAVA_CLIENT_SECRET": "${STRAVA_CLIENT_SECRET}"
+            "STRAVA_CLIENT_SECRET": "${STRAVA_CLIENT_SECRET}",
+            "STRAVA_WEBHOOK_TOKEN": "${STRAVA_WEBHOOK_TOKEN}"
         },
         "vpc_config": {
             "SubnetIds": [
@@ -51,7 +52,8 @@
             "JWT_SECRET_KEY": "${JWT_SECRET_KEY}",
             "SQLALCHEMY_DATABASE_URI": "${SQLALCHEMY_DATABASE_URI}",
             "SENTRY_DSN": "${SENTRY_DSN}",
-            "STRAVA_CLIENT_SECRET": "${STRAVA_CLIENT_SECRET}"
+            "STRAVA_CLIENT_SECRET": "${STRAVA_CLIENT_SECRET}",
+            "STRAVA_WEBHOOK_TOKEN": "${STRAVA_WEBHOOK_TOKEN}"
         },
         "vpc_config": {
             "SubnetIds": [
