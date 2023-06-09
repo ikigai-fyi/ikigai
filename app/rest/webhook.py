@@ -19,4 +19,10 @@ def ep_strava_webhook_validation(query: StravaWebhookValidationInput):
 @webhook.post("/strava")
 @spectree.validate(json=StravaWebhookInput)
 def ep_strava_webhook(json: StravaWebhookInput):
+    # Authenticate webhook using subscription ID
+    # It's far from perfect, but Strava does not propose any webhook auth mechanism
+    # We assume subscription ID remains a secret
+    if json.subscription_id != current_app.config["STRAVA_WEBHOOK_SUBSCRIPTION_ID"]:
+        raise UnauthorizedError
+
     return "ok"

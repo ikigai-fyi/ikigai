@@ -13,6 +13,7 @@ jobs:
       SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
       STRAVA_WEBHOOK_VALIDATION_TOKEN: ${{ secrets.STRAVA_WEBHOOK_VALIDATION_TOKEN }}
+      STRAVA_WEBHOOK_SUBSCRIPTION_ID: ${{ secrets.STRAVA_WEBHOOK_SUBSCRIPTION_ID }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.9
