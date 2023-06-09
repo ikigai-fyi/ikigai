@@ -13,10 +13,12 @@ from .auth import current_user, get_logged_strava_client, get_strava_client
 def get_random_activity() -> ActivityOutput:
     client = get_logged_strava_client()
     activities: list[StravaActivity] = list(client.get_activities(limit=100))
-    activities_with_picture = [
-        activity for activity in activities if activity.total_photo_count
+    candidates = [
+        activity
+        for activity in activities
+        if activity.total_photo_count and activity.start_latlng
     ]
-    strava_activity = random.choice(activities_with_picture)
+    strava_activity = random.choice(candidates)
     activity = fetch_and_store_activity(strava_activity.id, current_user)
     return ActivityOutput.from_orm(activity)
 
