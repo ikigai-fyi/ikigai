@@ -48,4 +48,4 @@ def _get_city(strava_activity: dict) -> str:
     geolocator = Nominatim(user_agent="fyi.ikigai")
     location = geolocator.reverse((lat, lon), exactly_one=True)
     address = location.raw["address"]
-    return address.get("city") or address["village"]
+    return address.get("city") or address.get("village") or address["town"]
