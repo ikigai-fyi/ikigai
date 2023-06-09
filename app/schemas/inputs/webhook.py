@@ -36,3 +36,10 @@ class StravaWebhookInput(BaseModel):
             self.object_type == StravaWebhookObjectType.ACTIVITY
             and self.aspect_type == StravaWebhookAspectType.CREATE
         )
+
+    @property
+    def is_update_activity(self) -> bool:
+        return (
+            self.object_type == StravaWebhookObjectType.ACTIVITY
+            and self.aspect_type == StravaWebhookAspectType.UPDATE
+        )

@@ -6,7 +6,7 @@ from tests.fixtures.resources.run import RUN_WITH_PICTURES_DETAIL
 def test_get_random_activity(
     client,
     get_activities_response_mock_run,
-    get_activity_response_mock_run,
+    get_run_activity_response_mock_run,
     get_reverse_geocoding_mock,
 ):
     athlete = AthleteFactory()
