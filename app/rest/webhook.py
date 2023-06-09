@@ -1,7 +1,7 @@
 from flask import Blueprint, current_app, jsonify
 
 from app.extensions import spectree
-from app.schemas.inputs.webhook import StravaWebhookValidationInput
+from app.schemas.inputs.webhook import StravaWebhookInput, StravaWebhookValidationInput
 from app.utils.error import UnauthorizedError
 
 webhook = Blueprint("webhook", __name__, url_prefix="/webhooks")
@@ -17,7 +17,6 @@ def ep_strava_webhook_validation(query: StravaWebhookValidationInput):
 
 
 @webhook.post("/strava")
-@spectree.validate()
-def ep_strava_webhook():
-    1 / 0
+@spectree.validate(json=StravaWebhookInput)
+def ep_strava_webhook(json: StravaWebhookInput):
     return "ok"

@@ -1,5 +1,11 @@
 import faker
 
+from tests.factory.strava_webhook import (
+    StravaWebhookInputFactory,
+    StravaWebhookAspectType,
+    StravaWebhookObjectType,
+)
+
 fake = faker.Faker()
 
 
@@ -19,3 +25,13 @@ def test_webhook_validation_ok(client, app):
 
     assert response.status_code == 200
     assert response.json == {"hub.challenge": challenge}
+
+
+def test_webhook_create_activity(client, app):
+    webhook_input = StravaWebhookInputFactory(
+        object_type=StravaWebhookObjectType.ACTIVITY,
+        aspect_type=StravaWebhookAspectType.CREATE,
+        subscription_id=1,
+    )
+    response = client.post("/rest/webhooks/strava", json=webhook_input.dict())
+    assert response.status_code == 200
