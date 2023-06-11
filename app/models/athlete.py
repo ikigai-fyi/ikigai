@@ -18,9 +18,9 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     __tablename__ = "athlete"
     __uuid_prefix__ = "ath"
 
-    first_name = db.Column(db.String(32))
-    last_name = db.Column(db.String(32))
-    picture_url = db.Column(db.String(256))
+    first_name = db.Column(db.String(32), nullable=False)
+    last_name = db.Column(db.String(32), nullable=False)
+    picture_url = db.Column(db.String(256), nullable=False)
 
     strava_id = db.Column(db.BigInteger, nullable=False, index=True, unique=True)
     strava_raw = db.Column(db.JSON(), nullable=False)
