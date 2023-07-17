@@ -11,3 +11,8 @@ auth = Blueprint("auth", __name__, url_prefix="/auth")
 @spectree.validate(json=StravaLoginInput)
 def ep_strava_login(json: StravaLoginInput):
     return jsonify(login_with_strava(json))
+
+@auth.post("/delete")
+@spectree.validate(json=StravaLoginInput)
+def ep_delete_account(json: StravaLoginInput):
+    return 200
