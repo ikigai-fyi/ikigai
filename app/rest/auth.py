@@ -16,4 +16,4 @@ def ep_strava_login(json: StravaLoginInput):
 @auth.post("/delete")
 @spectree.validate()
 def ep_delete_account():
-    return 200
+    return "ok"
