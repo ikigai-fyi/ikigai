@@ -60,3 +60,17 @@ def test_get_random_activity_no_activity(
         "type": "NoActivityError",
         "message": "No activity available on Strava yet",
     }
+
+
+def test_get_random_activity_no_activity_with_picture(
+    client,
+    get_activities_response_mock_no_picture,
+):
+    athlete = AthleteFactory()
+    response = client.authenticated(athlete).get("/rest/activities/random")
+
+    assert response.status_code == 400
+    assert response.json == {
+        "type": "NoRecentActivityWithPictureError",
+        "message": "No recent activity has pictures to be dispayed",
+    }

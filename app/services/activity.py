@@ -6,7 +6,7 @@ from stravalib.model import Activity as StravaActivity
 from app.models.activity import Activity
 from app.models.athlete import Athlete
 from app.schemas.outputs.activity import ActivityOutput
-from app.utils.error import NoActivityError
+from app.utils.error import NoActivityError, NoRecentActivityWithPictureError
 
 from .auth import current_user, get_logged_strava_client, get_strava_client
 
@@ -17,12 +17,13 @@ def get_random_activity() -> ActivityOutput:
     if not activities:
         raise NoActivityError
 
-    candidates = [
-        activity
-        for activity in activities
-        if activity.total_photo_count and activity.start_latlng
+    activities_with_picture = [
+        activity for activity in activities if activity.total_photo_count
     ]
-    strava_activity = random.choice(candidates)
+    if not activities_with_picture:
+        raise NoRecentActivityWithPictureError
+
+    strava_activity = random.choice(activities_with_picture)
     activity = fetch_and_store_activity(strava_activity.id, current_user)
     return ActivityOutput.from_orm(activity)
 
@@ -48,6 +49,10 @@ def _fetch_raw_activity(strava_id: int, athlete: Athlete) -> dict:
 
 
 def _get_city(strava_activity: dict) -> str:
+    # Retro-compat until we handle NULL cities in app
+    if not strava_activity["start_latlng"]:
+        return ""
+
     lat, lon = strava_activity["start_latlng"][0], strava_activity["start_latlng"][1]
     geolocator = Nominatim(user_agent="fyi.ikigai")
     location = geolocator.reverse((lat, lon), exactly_one=True)
