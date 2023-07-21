@@ -31,3 +31,19 @@ class AthleteNotFoundError(BaseError):
         "en": "Athlete not found",
         "fr": "Athlete inconnu",
     }
+
+
+class NoActivityError(BaseError):
+    HTTP_STATUS = HTTPStatus.BAD_REQUEST
+    MESSAGE = {
+        "en": "No activity available on Strava yet",
+        "fr": "Aucune activity encore disponible sur Strava",
+    }
+
+
+class NoRecentActivityWithPictureError(BaseError):
+    HTTP_STATUS = HTTPStatus.BAD_REQUEST
+    MESSAGE = {
+        "en": "No recent activity has pictures to be dispayed",
+        "fr": "Aucune activité récente ne contient de photo",
+    }
