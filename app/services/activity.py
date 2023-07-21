@@ -6,6 +6,7 @@ from stravalib.model import Activity as StravaActivity
 from app.models.activity import Activity
 from app.models.athlete import Athlete
 from app.schemas.outputs.activity import ActivityOutput
+from app.utils.error import NoActivityError
 
 from .auth import current_user, get_logged_strava_client, get_strava_client
 
@@ -13,6 +14,9 @@ from .auth import current_user, get_logged_strava_client, get_strava_client
 def get_random_activity() -> ActivityOutput:
     client = get_logged_strava_client()
     activities: list[StravaActivity] = list(client.get_activities(limit=100))
+    if not activities:
+        raise NoActivityError
+
     candidates = [
         activity
         for activity in activities

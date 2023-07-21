@@ -20,6 +20,16 @@ def get_activities_response_mock_run(requests_mock):
 
 
 @pytest.fixture
+def get_activities_response_mock_no_activity(requests_mock):
+    requests_mock.add(
+        responses.GET,
+        f"{STRAVA_URL}/athlete/activities",
+        json=[],
+    )
+    yield requests_mock
+
+
+@pytest.fixture
 def get_run_activity_response_mock_run(requests_mock):
     requests_mock.add(
         responses.GET,
