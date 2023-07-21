@@ -7,7 +7,7 @@
         "runtime": "python3.9",
         "s3_bucket": "zappa-ikigai",
         "slim_handler": false,
-        "keep_warm": false,
+        "keep_warm": true,
         "environment_variables": {
             "APP_CONFIG": "dev",
             "JWT_SECRET_KEY": "${JWT_SECRET_KEY}",
