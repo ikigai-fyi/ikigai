@@ -1,5 +1,8 @@
+from functools import wraps
+
 from zappa.asynchronous import task
 
+from app import create_app
 from app.models.activity import Activity
 from app.models.activity_fetch_job import ActivityFetchJob
 from app.models.athlete import Athlete
@@ -7,7 +10,20 @@ from app.models.athlete import Athlete
 from .client import get_strava_client
 
 
+def with_app_context():
+    def decorator(decorated_function):
+        @wraps(decorated_function)
+        def wrapper():
+            with create_app().app_context() as context:
+                return decorated_function(context)
+
+        return wrapper
+
+    return decorator
+
+
 @task
+@with_app_context()
 def fetch_and_store_activities_async(athlete_id: int):
     athlete = Athlete.get_by_id(athlete_id)
     client = get_strava_client(athlete)
