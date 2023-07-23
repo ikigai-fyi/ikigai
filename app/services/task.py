@@ -40,7 +40,8 @@ def fetch_and_store_activities_async(athlete_id: int):
             job.add(commit=True)
 
     # Launch the first job
-    process_activity_fetch_job_async(job.id)
+    job_id = job.id if job else None
+    process_activity_fetch_job_async(job_id)
 
 
 @task
