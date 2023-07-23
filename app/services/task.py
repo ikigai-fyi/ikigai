@@ -1,4 +1,5 @@
 from functools import wraps
+from typing import Optional
 
 from zappa.asynchronous import task
 
@@ -7,10 +8,11 @@ from app.models.activity import Activity
 from app.models.activity_fetch_job import ActivityFetchJob
 from app.models.athlete import Athlete
 
+from .activity import fetch_and_store_activity
 from .client import get_strava_client
 
 
-def with_app_context(*args):
+def with_app_context():
     def decorator(decorated_function):
         @wraps(decorated_function)
         def wrapper(*args, **kwargs):
@@ -23,7 +25,7 @@ def with_app_context(*args):
 
 
 @task
-@with_app_context
+@with_app_context()
 def fetch_and_store_activities_async(athlete_id: int):
     athlete = Athlete.get_by_id(athlete_id)
     client = get_strava_client(athlete)
@@ -37,4 +39,23 @@ def fetch_and_store_activities_async(athlete_id: int):
             )
             job.add(commit=True)
 
-    # TODO launch first job
+    # Launch the first job
+    process_activity_fetch_job_async(job.id)
+
+
+@task
+@with_app_context()
+def process_activity_fetch_job_async(job_id: Optional[int]):
+    query = ActivityFetchJob.query
+    if job_id:
+        query = query.filter(ActivityFetchJob.id == job_id)
+
+    job: Optional[ActivityFetchJob] = query.first()
+    if not job or job.is_done:
+        return
+
+    athlete = Athlete.get_by_id(job.athlete_id)
+    fetch_and_store_activity(job.activity_strava_id, athlete)
+
+    # Continue with random other job
+    process_activity_fetch_job_async()
