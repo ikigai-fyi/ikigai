@@ -10,7 +10,7 @@ from app.models.athlete import Athlete
 from .client import get_strava_client
 
 
-def with_app_context():
+def with_app_context(*args):
     def decorator(decorated_function):
         @wraps(decorated_function)
         def wrapper(*args, **kwargs):
@@ -23,7 +23,7 @@ def with_app_context():
 
 
 @task
-@with_app_context()
+@with_app_context
 def fetch_and_store_activities_async(athlete_id: int):
     athlete = Athlete.get_by_id(athlete_id)
     client = get_strava_client(athlete)
