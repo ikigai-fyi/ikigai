@@ -1,5 +1,6 @@
 import random
 
+from flask_jwt_extended import current_user
 from geopy.geocoders import Nominatim
 from stravalib.model import Activity as StravaActivity
 
@@ -12,7 +13,7 @@ from app.utils.error import (
     NoRecentActivityWithPictureError,
 )
 
-from .auth import current_user, get_logged_strava_client, get_strava_client
+from .client import get_logged_strava_client, get_strava_client
 
 
 def get_random_activity() -> ActivityOutput:
