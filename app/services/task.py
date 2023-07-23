@@ -13,9 +13,9 @@ from .client import get_strava_client
 def with_app_context():
     def decorator(decorated_function):
         @wraps(decorated_function)
-        def wrapper():
-            with create_app().app_context() as context:
-                return decorated_function(context)
+        def wrapper(*args, **kwargs):
+            with create_app().app_context():
+                return decorated_function(*args, **kwargs)
 
         return wrapper
 
