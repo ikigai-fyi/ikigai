@@ -47,3 +47,11 @@ class NoRecentActivityWithPictureError(BaseError):
         "en": "No recent activity has pictures to be dispayed",
         "fr": "Aucune activité récente ne contient de photo",
     }
+
+
+class ActivityCityNotFoundError(BaseError):
+    HTTP_STATUS = HTTPStatus.BAD_REQUEST
+    MESSAGE = {
+        "en": "Impossible to find the activity city",
+        "fr": "Impossible de trouver la ville de l'activité",
+    }

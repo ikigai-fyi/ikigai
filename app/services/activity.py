@@ -6,7 +6,11 @@ from stravalib.model import Activity as StravaActivity
 from app.models.activity import Activity
 from app.models.athlete import Athlete
 from app.schemas.outputs.activity import ActivityOutput
-from app.utils.error import NoActivityError, NoRecentActivityWithPictureError
+from app.utils.error import (
+    ActivityCityNotFoundError,
+    NoActivityError,
+    NoRecentActivityWithPictureError,
+)
 
 from .auth import current_user, get_logged_strava_client, get_strava_client
 
@@ -57,4 +61,10 @@ def _get_city(strava_activity: dict) -> str:
     geolocator = Nominatim(user_agent="fyi.ikigai")
     location = geolocator.reverse((lat, lon), exactly_one=True)
     address = location.raw["address"]
-    return address.get("city") or address.get("village") or address["town"]
+
+    fields_lookup_by_priority = ["city", "village", "town", "state"]
+    for field in fields_lookup_by_priority:
+        if field in address:
+            return address[field]
+
+    raise ActivityCityNotFoundError
