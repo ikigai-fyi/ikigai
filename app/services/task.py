@@ -56,6 +56,7 @@ def process_activity_fetch_job_async(job_id: Optional[int]):
 
     athlete = Athlete.get_by_id(job.athlete_id)
     fetch_and_store_activity(job.activity_strava_id, athlete)
+    job.mark_as_done()
 
     # Continue with random other job
     process_activity_fetch_job_async()
