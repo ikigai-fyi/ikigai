@@ -51,14 +51,18 @@ def process_activity_fetch_job_async(job_id: Optional[int] = None):
     if job_id:
         job = ActivityFetchJob.get_by_id(job_id)
     else:
-        job = ActivityFetchJob.query.filter(ActivityFetchJob.done_at.is_(None)).first()
+        job = ActivityFetchJob.get_job_to_process()
 
-    if not job or job.is_done:
+    if (not job) or (job and job.is_done):
+        # What's next?
+        if not ActivityFetchJob.is_queue_empty():
+            process_activity_fetch_job_async()
+
         return
 
     athlete = Athlete.get_by_id(job.athlete_id)
     fetch_and_store_activity(job.activity_strava_id, athlete)
     job.mark_as_done()
 
-    # Continue with random other job
+    # What's next?
     process_activity_fetch_job_async()
