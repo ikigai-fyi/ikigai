@@ -21,6 +21,7 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     first_name = db.Column(db.String(32), nullable=False)
     last_name = db.Column(db.String(32), nullable=False)
     picture_url = db.Column(db.String(256), nullable=False)
+    updated_from_strava_at = db.Column(db.DateTime, nullable=False)
 
     strava_id = db.Column(db.BigInteger, nullable=False, index=True, unique=True)
     strava_raw = db.Column(db.JSON(), nullable=False)
@@ -52,6 +53,7 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
         athlete.first_name = strava_athlete.firstname
         athlete.last_name = strava_athlete.lastname
         athlete.picture_url = strava_athlete.profile
+        athlete.updated_from_strava_at = datetime.utcnow()
         athlete.strava_id = strava_athlete.id
         athlete.strava_raw = strava_athlete.json()
         athlete.add()

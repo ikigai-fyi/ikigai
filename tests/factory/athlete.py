@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import factory
 
 from app.models.athlete import Athlete
@@ -16,6 +18,7 @@ class AthleteFactory(factory.alchemy.SQLAlchemyModelFactory):
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
     picture_url = "https://picture.url"
+    updated_from_strava_at = datetime.utcnow()
 
     strava_id = factory.Faker("pyint")
     strava_raw: dict = {}
