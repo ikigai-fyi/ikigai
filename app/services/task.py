@@ -31,6 +31,7 @@ def fetch_and_store_activities_async(athlete_id: int):
     client = get_strava_client(athlete)
     activities_iterator = client.get_activities()
 
+    job = None
     for activity in activities_iterator:
         is_not_stored = Activity.get_by_strava_id(activity.id) is None
         if is_not_stored and activity.total_photo_count:
