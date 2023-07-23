@@ -45,12 +45,13 @@ def fetch_and_store_activities_async(athlete_id: int):
 
 @task
 @with_app_context()
-def process_activity_fetch_job_async(job_id: Optional[int]):
-    query = ActivityFetchJob.query
+def process_activity_fetch_job_async(job_id: Optional[int] = None):
+    job: Optional[ActivityFetchJob]
     if job_id:
-        query = query.filter(ActivityFetchJob.id == job_id)
+        job = ActivityFetchJob.get_by_id(job_id)
+    else:
+        job = ActivityFetchJob.query.filter(ActivityFetchJob.done_at.is_(None)).first()
 
-    job: Optional[ActivityFetchJob] = query.first()
     if not job or job.is_done:
         return
 
