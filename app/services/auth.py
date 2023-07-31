@@ -5,7 +5,6 @@ from stravalib import Client
 from app.models.athlete import Athlete
 from app.schemas.inputs.auth import StravaLoginInput
 from app.schemas.outputs.auth import StravaLoginOutput
-from app.services.task import fetch_and_store_activities_async
 
 
 def login_with_strava(input: StravaLoginInput) -> StravaLoginOutput:
@@ -26,7 +25,10 @@ def login_with_strava(input: StravaLoginInput) -> StravaLoginOutput:
         access_token, response["expires_at"], response["refresh_token"], input.scope
     )
 
-    fetch_and_store_activities_async(athlete.id)
+    # FIXME: this does not quite work yet
+    # Tasks are calling themselves until queue is empty,
+    # but AWS detects a recursive call and stops the chain after 5 calls-ish
+    # fetch_and_store_activities_async(athlete.id)
 
     return StravaLoginOutput(
         athlete=StravaLoginOutput.Athlete.from_orm(athlete),
