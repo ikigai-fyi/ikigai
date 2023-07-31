@@ -13,6 +13,7 @@ class ActivityOutput(BaseModel):
     start_datetime: datetime
     city: str
     picture_url: str
+    strava_id: str
 
     polyline: Optional[str]
     distance_in_meters: Optional[int]

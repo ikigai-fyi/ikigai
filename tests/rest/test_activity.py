@@ -23,6 +23,7 @@ def test_get_random_activity(
         "sport_type": "Run",
         "start_datetime": "2023-05-06T18:00:59",
         "total_elevation_gain_in_meters": 242,
+        "strava_id": "9024223766",
         # Deprecated
         "picture_urls": [
             "https://dgtzuqphqg23d.cloudfront.net/b7G42pDWBelvNgJI1g7GKb1lnKuUB9DEUZ77IZF-qRs-768x576.jpg"
