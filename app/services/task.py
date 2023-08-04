@@ -1,6 +1,10 @@
+import random
 from functools import wraps
 from typing import Optional
 
+import sentry_sdk
+from flask import current_app
+from sendblue import Sendblue
 from zappa.asynchronous import task
 
 from app import create_app
@@ -67,3 +71,43 @@ def process_activity_fetch_job_async(job_id: Optional[int] = None):
 
     # What's next?
     process_activity_fetch_job_async()
+
+
+@task
+@with_app_context()
+def send_welcome_message_async(athlete_id: int):
+    athlete: Athlete = Athlete.get_by_id(athlete_id)
+    args = dict(
+        numbers=[
+            current_app.config["PHONE_NUMBER_VINCENT"],
+            current_app.config["PHONE_NUMBER_PAUL"],
+        ],
+        content=f"Bienvenue à... {athlete.first_name}! 🤙",
+        media_url=athlete.picture_url,
+        send_style=random.choice(
+            [
+                "celebration",
+                "shooting_star",
+                "fireworks",
+                "lasers",
+                "love",
+                "confetti",
+                "balloons",
+                "spotlight",
+                "echo",
+                "invisible",
+                "gentle",
+                "loud",
+                "slam",
+            ]
+        ),
+        # status_callback="https://example.com/callback", # We will see this later
+    )
+
+    try:
+        Sendblue(
+            current_app.config["SENDBLUE_API_KEY"],
+            current_app.config["SENDBLUE_API_SECRET"],
+        ).send_group_message(args)
+    except Exception as e:
+        sentry_sdk.capture_exception(e)

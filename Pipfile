@@ -8,6 +8,7 @@ stravalib = "*"
 flask = "*"
 flask-cors = "*"
 flask-sqlalchemy = "*"
+sqlalchemy = "*"
 flask-migrate = "*"
 psycopg = {extras = ["binary", "pool"], version = "*"}
 shortuuid = "*"
@@ -18,6 +19,7 @@ pydantic = "*"
 spectree = "*"
 flask-jwt-extended = "*"
 geopy = "*"
+sendblue = "*"
 
 [dev-packages]
 ruff = "*"

@@ -39,6 +39,10 @@ jobs:
       STRAVA_CLIENT_SECRET: ${{ secrets.STRAVA_CLIENT_SECRET }}
       STRAVA_WEBHOOK_VALIDATION_TOKEN: ${{ secrets.STRAVA_WEBHOOK_VALIDATION_TOKEN }}
       STRAVA_WEBHOOK_SUBSCRIPTION_ID: ${{ secrets.STRAVA_WEBHOOK_SUBSCRIPTION_ID }}
+      PHONE_NUMBER_PAUL: ${{ secrets.PHONE_NUMBER_PAUL }}
+      PHONE_NUMBER_VINCENT: ${{ secrets.PHONE_NUMBER_VINCENT }}
+      SENDBLUE_API_KEY: ${{ secrets.SENDBLUE_API_KEY }}
+      SENDBLUE_API_SECRET: ${{ secrets.SENDBLUE_API_SECRET }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.9
