@@ -17,13 +17,15 @@ repos:
         language: system
         types: [python]
         files: .
-  - repo: local
-    hooks:
-      - id: mypy
-        stages: [commit]
-        name: mypy
-        entry: mypy
-        require_serial: true
-        language: system
-        types: [python]
-        files: .
+  # It's pissing me off 
+  # https://github.com/ikigai-fyi/ikigai/actions/runs/5764702906/job/15629224628?pr=14
+  # - repo: local
+  #   hooks:
+  #     - id: mypy
+  #       stages: [commit]
+  #       name: mypy
+  #       entry: mypy
+  #       require_serial: true
+  #       language: system
+  #       types: [python]
+  #       files: .

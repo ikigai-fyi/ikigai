@@ -42,13 +42,15 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
         return athlete
 
     @classmethod
-    def update_or_create(cls, strava_athlete: StravaAthlete) -> Athlete:
+    def update_or_create(cls, strava_athlete: StravaAthlete) -> tuple[Athlete, bool]:
         athlete = Athlete.query.filter(
             Athlete.strava_id == strava_athlete.id
         ).one_or_none()
 
+        created = False
         if not athlete:
             athlete = Athlete()
+            created = True
 
         athlete.first_name = strava_athlete.firstname
         athlete.last_name = strava_athlete.lastname
@@ -59,7 +61,7 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
         athlete.add()
         db.session.commit()
 
-        return athlete
+        return athlete, created
 
     def update_strava_token(
         self,
