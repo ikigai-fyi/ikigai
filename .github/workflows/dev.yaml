@@ -70,6 +70,8 @@ jobs:
         run: envsubst < zappa_settings.template.json > zappa_settings.json
       - name: Apply database migrations
         run: flask db upgrade head
+      - name: Activate virtual env
+        run: source .venv/bin/activate
       - name: Update Zappa deployment
         run: zappa update dev
       - name: Revoke Github actions IP to db security group
