@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 import faker
 import pytest
 
@@ -17,7 +19,7 @@ def test_webhook_validation_unauthorized(client):
     response = client.get(
         f"/rest/webhooks/strava?hub.verify_token={fake.pystr()}&hub.challenge=challenge&hub.mode=subscribe",
     )
-    assert response.status_code == 401
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
 
 
 def test_webhook_validation_ok(client, app):
@@ -27,7 +29,7 @@ def test_webhook_validation_ok(client, app):
         f"/rest/webhooks/strava?hub.verify_token={token}&hub.challenge={challenge}&hub.mode=subscribe",
     )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert response.json == {"hub.challenge": challenge}
 
 
@@ -38,7 +40,7 @@ def test_webhook_unauthorized(client, app):
         subscription_id=app.config["STRAVA_WEBHOOK_SUBSCRIPTION_ID"] + 1,
     )
     response = client.post("/rest/webhooks/strava", json=webhook_input.dict())
-    assert response.status_code == 401
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
 
 
 @pytest.mark.usefixtures(
@@ -54,7 +56,7 @@ def test_webhook_create_activity(client, app):
         object_id=9024223766,
     )
     response = client.post("/rest/webhooks/strava", json=webhook_input.dict())
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert Activity.get_by_strava_id(9024223766)
 
 
@@ -72,5 +74,5 @@ def test_webhook_update_activity(client, app):
         object_id=activity.strava_id,
     )
     response = client.post("/rest/webhooks/strava", json=webhook_input.dict())
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert Activity.get_by_strava_id(activity.strava_id).updated_at

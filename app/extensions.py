@@ -87,7 +87,7 @@ def register_error_handler(app: Flask):
             # Some helpful headers are automatically added by Werkzeug
             # (eg allowed methods for 405 Method not allowed error, ...),
             # but remove Content-Type which it sets to text/html instead of json
-            if e.code >= 500:
+            if e.code >= HTTPStatus.INTERNAL_SERVER_ERROR:
                 sentry_sdk.capture_exception(e)
 
             headers = dict(e.get_headers())

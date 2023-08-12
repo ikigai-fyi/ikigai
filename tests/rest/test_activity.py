@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 import pytest
 
 from app.models.activity import Activity
@@ -12,7 +14,7 @@ def test_get_random_activity(client):
     athlete = AthleteFactory()
     response = client.authenticated(athlete).get("/rest/activities/random")
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert response.json == {
         "city": "Annecy",
         "distance_in_meters": 42067,
@@ -54,7 +56,7 @@ def test_get_random_activity_no_activity(client):
     athlete = AthleteFactory()
     response = client.authenticated(athlete).get("/rest/activities/random")
 
-    assert response.status_code == 400
+    assert response.status_code == HTTPStatus.BAD_REQUEST
     assert response.json == {
         "type": "NoActivityError",
         "message": "No activity available on Strava yet",
@@ -66,7 +68,7 @@ def test_get_random_activity_no_activity_with_picture(client):
     athlete = AthleteFactory()
     response = client.authenticated(athlete).get("/rest/activities/random")
 
-    assert response.status_code == 400
+    assert response.status_code == HTTPStatus.BAD_REQUEST
     assert response.json == {
         "type": "NoRecentActivityWithPictureError",
         "message": "No recent activity has pictures to be dispayed",
