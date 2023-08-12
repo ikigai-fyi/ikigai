@@ -23,6 +23,6 @@ class ActivityOutput(BaseModel):
     picture_urls: list[str] | None
 
     @root_validator
-    def fill_picture_urls(self, values) -> dict:
+    def fill_picture_urls(cls, values) -> dict:  # noqa: N805
         values["picture_urls"] = [values["picture_url"]]
         return values

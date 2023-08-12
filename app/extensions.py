@@ -20,7 +20,7 @@ from app.utils.json_encoder import JSONEncoder
 
 
 class _BaseModel(Model):
-    def add(self, flush: bool = False, commit: bool = False):
+    def add(self, *, flush: bool = False, commit: bool = False):
         db.session.add(self)
 
         if flush:
@@ -35,7 +35,7 @@ class _BaseModel(Model):
         db.session.commit()
         return self
 
-    def delete(self, commit: bool = False):
+    def delete(self, *, commit: bool = False):
         db.session.delete(self)
 
         if commit:
