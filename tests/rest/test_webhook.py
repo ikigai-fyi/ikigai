@@ -44,7 +44,8 @@ def test_webhook_unauthorized(client, app):
 
 
 @pytest.mark.usefixtures(
-    "get_run_activity_response_mock_run, get_reverse_geocoding_mock",
+    "get_run_activity_response_mock_run",
+    "get_reverse_geocoding_mock",
 )
 def test_webhook_create_activity(client, app):
     athlete = AthleteFactory()
@@ -61,7 +62,8 @@ def test_webhook_create_activity(client, app):
 
 
 @pytest.mark.usefixtures(
-    "get_bike_activity_response_mock_run, get_reverse_geocoding_mock",
+    "get_bike_activity_response_mock_run",
+    "get_reverse_geocoding_mock",
 )
 def test_webhook_update_activity(client, app):
     athlete = AthleteFactory()
