@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import RelationshipProperty
 from stravalib.model import Athlete as StravaAthlete
 
 from app import db
@@ -29,7 +29,7 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
         db.Integer, db.ForeignKey("strava_token.id"), index=True
     )
 
-    strava_token: Mapped[StravaToken] = db.relationship(
+    strava_token: RelationshipProperty[StravaToken] = db.relationship(
         "StravaToken", backref="athlete"
     )
 

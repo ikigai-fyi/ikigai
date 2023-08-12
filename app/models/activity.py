@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import RelationshipProperty, Mapped
 
 from pydantic.datetime_parse import parse_datetime
 from app import db
@@ -34,7 +34,9 @@ class Activity(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     athlete_id = db.Column(
         db.Integer, db.ForeignKey("athlete.id"), index=True, nullable=False
     )
-    athlete: Mapped[Athlete] = db.relationship("Athlete", backref="activities")
+    athlete: RelationshipProperty[Athlete] = db.relationship(
+        "Athlete", backref="activities"
+    )
 
     @classmethod
     def get_by_strava_id(cls, strava_id: int) -> Optional[Activity]:
@@ -59,12 +61,16 @@ class Activity(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
             tzinfo=None
         )
         activity.city = city
-        activity.picture_url = picture_url
-        activity.distance_in_meters = strava_activity["distance"] or None
-        activity.total_elevation_gain_in_meters = (
-            strava_activity["total_elevation_gain"] or None
+        activity.picture_url = picture_url  # type: ignore
+        activity.distance_in_meters = (
+            strava_activity["distance"] or None  # type: ignore
         )
-        activity.polyline = strava_activity["map"]["summary_polyline"] or None
+        activity.total_elevation_gain_in_meters = (
+            strava_activity["total_elevation_gain"] or None  # type: ignore
+        )
+        activity.polyline = (
+            strava_activity["map"]["summary_polyline"] or None  # type: ignore
+        )
         activity.strava_id = strava_activity["id"]
         activity.strava_raw = strava_activity
         activity.athlete_id = athlete_id
