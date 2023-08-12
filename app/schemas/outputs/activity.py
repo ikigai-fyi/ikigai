@@ -1,5 +1,4 @@
 from pydantic import BaseModel, root_validator
-from typing import Optional
 from datetime import datetime
 
 
@@ -15,12 +14,12 @@ class ActivityOutput(BaseModel):
     picture_url: str
     strava_id: str
 
-    polyline: Optional[str]
-    distance_in_meters: Optional[int]
-    total_elevation_gain_in_meters: Optional[int]
+    polyline: str | None
+    distance_in_meters: int | None
+    total_elevation_gain_in_meters: int | None
 
     # Deprecated, remove once app ready
-    picture_urls: Optional[list[str]]
+    picture_urls: list[str] | None
 
     @root_validator
     def fill_picture_urls(cls, values) -> dict:

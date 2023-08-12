@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Optional
 
 from sqlalchemy.orm import Mapped
 
@@ -39,7 +38,7 @@ class Activity(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     )
 
     @classmethod
-    def get_by_strava_id(cls, strava_id: int) -> Optional[Activity]:
+    def get_by_strava_id(cls, strava_id: int) -> Activity | None:
         return Activity.query.filter_by(strava_id=strava_id).one_or_none()
 
     @classmethod

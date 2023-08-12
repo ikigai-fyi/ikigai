@@ -1,6 +1,5 @@
 import random
 from functools import wraps
-from typing import Optional
 
 import sentry_sdk
 from flask import current_app
@@ -51,8 +50,8 @@ def fetch_and_store_activities_async(athlete_id: int):
 
 @task
 @with_app_context()
-def process_activity_fetch_job_async(job_id: Optional[int] = None):
-    job: Optional[ActivityFetchJob]
+def process_activity_fetch_job_async(job_id: int | None = None):
+    job: ActivityFetchJob | None
     if job_id:
         job = ActivityFetchJob.get_by_id(job_id)
     else:
