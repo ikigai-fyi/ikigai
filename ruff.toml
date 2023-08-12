@@ -1,3 +1,0 @@
-target-version = "py39"
-extend-exclude = ["tests/fixtures/resources/*.py"]
-force-exclude = true
