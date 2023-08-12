@@ -53,13 +53,13 @@ allow-direct-references = true
 
 [tool.ruff]
 target-version = "py310"
-select = ["E", "F", "C90", "I", "N", "UP", "YTT", "BLE", "FBT", "B", "COM", "C4", "T10", "EXE", "ISC", "ICN", "G", "INP", "PIE", "T20", "PYI"]
+select = ["E", "F", "C90", "I", "N", "UP", "YTT", "BLE", "FBT", "B", "COM", "C4", "T10", "EXE", "ISC", "ICN", "G", "INP", "PIE", "T20", "PYI", "PT", "Q"]
 extend-exclude = ["tests/fixtures/resources/*.py"]
 force-exclude = true
 
 [tool.mypy]
 [[tool.mypy.overrides]]
-module = "stravalib.*,factory.*,geopy.geocoders.*,zappa.asynchronous.*,sendblue.*"
+module = "stravalib.*,factory.*,geopy.geocoders.*,zappa.asynchronous.*,sendblue.*,tests.pytest.fixtures.nominatim.*,tests.pytest.fixtures.strava.*"
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

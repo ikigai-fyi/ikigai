@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import os
 
+import pytest
 import sqlalchemy
 from flask import current_app, testing
 from flask_jwt_extended import create_access_token
-from pytest import fixture
 from responses import RequestsMock
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
@@ -14,7 +14,7 @@ from app import create_app
 from app.extensions import db as _db
 
 
-@fixture(scope="session")
+@pytest.fixture(scope="session")
 def app():
     app_config = os.environ.get("APP_CONFIG")
     if app_config not in {"testing", "sqlite_testing"}:
@@ -27,7 +27,7 @@ def app():
         yield app
 
 
-@fixture(scope="function")
+@pytest.fixture()
 def client(app):
     app.test_client_class = build_test_client_class({})
     with app.test_client() as client:
@@ -44,7 +44,7 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
         cursor.close()
 
 
-@fixture(scope="session")
+@pytest.fixture(scope="session")
 def db(app):
     """Session-wide test database."""
     _db.app = app
@@ -73,7 +73,7 @@ def db(app):
     _db.drop_all()
 
 
-@fixture(scope="function", autouse=True)
+@pytest.fixture(autouse=True)
 def db_session(db):
     """Creates a new database session for a test."""
     connection = db.engine.connect()
@@ -91,7 +91,7 @@ def db_session(db):
     session.remove()
 
 
-@fixture(scope="function", autouse=True)
+@pytest.fixture(autouse=True)
 def requests_mock():
     with RequestsMock(assert_all_requests_are_fired=True) as requests_mock_obj:
         yield requests_mock_obj
@@ -119,5 +119,5 @@ def build_test_client_class(default_headers: dict):
     return TestClient
 
 
-from .fixtures.nominatim import *  # noqa: E402, F403
-from .fixtures.strava import *  # noqa: E402, F403
+from .pytest.fixtures.nominatim import *  # noqa: E402, F403
+from .pytest.fixtures.strava import *  # noqa: E402, F403

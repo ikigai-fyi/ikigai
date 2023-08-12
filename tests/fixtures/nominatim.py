@@ -2,7 +2,7 @@ import pytest
 import responses
 
 
-@pytest.fixture
+@pytest.fixture()
 def get_reverse_geocoding_mock(requests_mock):
     requests_mock.add(
         responses.GET,
@@ -38,4 +38,4 @@ def get_reverse_geocoding_mock(requests_mock):
             },
         },
     )
-    yield requests_mock
+    return requests_mock
