@@ -1,6 +1,5 @@
 [project]
 name = "ikigai"
-version = "0.1.0"
 description = "Ikigai backend"
 authors = [
     { name = "Paul Nicolet" }
