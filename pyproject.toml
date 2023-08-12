@@ -25,7 +25,7 @@ dependencies = [
     # Issue with latest boto3: https://stackoverflow.com/questions/75887656/botocore-package-in-lambda-python-3-9-runtime-return-error-cannot-import-name
 ]
 readme = "README.md"
-requires-python = ">= 3.9"
+requires-python = ">= 3.10"
 
 [build-system]
 requires = ["hatchling"]

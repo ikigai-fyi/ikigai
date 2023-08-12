@@ -28,7 +28,6 @@ geopy==2.3.0
 greenlet==2.0.2
 hjson==3.1.0
 idna==3.4
-importlib-metadata==6.8.0
 itsdangerous==2.1.2
 jinja2==3.1.2
 jmespath==1.0.1
@@ -64,6 +63,5 @@ urllib3==1.26.16
 werkzeug==2.3.6
 wheel==0.41.1
 zappa==0.57.0
-zipp==3.16.2
 # The following packages are considered to be unsafe in a requirements file:
 pip==23.2.1

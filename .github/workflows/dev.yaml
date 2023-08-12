@@ -10,10 +10,10 @@ jobs:
       APP_CONFIG: "sqlite_testing"
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.9
+      - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.10"
       - name: Install dependencies
         run: pip install -r requirements.lock
       - name: Install dev dependencies
@@ -47,10 +47,10 @@ jobs:
       SENDBLUE_API_SECRET: ${{ secrets.SENDBLUE_API_SECRET }}
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.9
+      - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.10"
       - name: Install dependencies in virtual env, required for Zappa
         run: | 
           python -m venv .venv
