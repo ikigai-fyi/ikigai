@@ -16,5 +16,5 @@ def handle_strava_webhook(input: StravaWebhookInput):
 
         try:
             fetch_and_store_activity(input.object_id, athlete)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             current_app.logger.warn("Failed to process Strava webhook", exc_info=e)

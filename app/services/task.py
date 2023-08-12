@@ -108,5 +108,5 @@ def send_welcome_message_async(athlete_id: int):
             current_app.config["SENDBLUE_API_KEY"],
             current_app.config["SENDBLUE_API_SECRET"],
         ).send_group_message(args)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         sentry_sdk.capture_exception(e)
