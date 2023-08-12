@@ -1,5 +1,5 @@
-from tests.factory.athlete import AthleteFactory
 from app.models.activity import Activity
+from tests.factory.athlete import AthleteFactory
 from tests.fixtures.resources.run import RUN_WITH_PICTURES_DETAIL
 
 

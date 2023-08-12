@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from pydantic.datetime_parse import parse_datetime
 from sqlalchemy.orm import Mapped
 
-from pydantic.datetime_parse import parse_datetime
 from app import db
 
 from .athlete import Athlete

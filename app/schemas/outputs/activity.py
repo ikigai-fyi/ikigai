@@ -1,5 +1,6 @@
-from pydantic import BaseModel, root_validator
 from datetime import datetime
+
+from pydantic import BaseModel, root_validator
 
 
 class ActivityOutput(BaseModel):

@@ -53,6 +53,7 @@ allow-direct-references = true
 
 [tool.ruff]
 target-version = "py310"
+select = ["E", "F", "I"]
 extend-exclude = ["tests/fixtures/resources/*.py"]
 force-exclude = true
 

@@ -3,12 +3,12 @@ import re
 import pytest
 import responses
 
+from .resources.bike import BIKE_WITH_PICTURES_DETAIL
 from .resources.run import (
     RUN_WITH_PICTURES_DETAIL,
     RUN_WITH_PICTURES_PREVIEW,
     RUN_WITHOUT_PICTURE_PREVIEW,
 )
-from .resources.bike import BIKE_WITH_PICTURES_DETAIL
 
 STRAVA_URL = "https://www.strava.com/api/v3"
 
