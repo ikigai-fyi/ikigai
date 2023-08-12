@@ -18,20 +18,22 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     __tablename__ = "athlete"
     __uuid_prefix__ = "ath"
 
-    first_name = db.Column(db.String(32), nullable=False)
-    last_name = db.Column(db.String(32), nullable=False)
-    picture_url = db.Column(db.String(256), nullable=False)
-    updated_from_strava_at = db.Column(db.DateTime, nullable=False)
+    first_name: Mapped[str] = db.Column(db.String(32), nullable=False)
+    last_name: Mapped[str] = db.Column(db.String(32), nullable=False)
+    picture_url: Mapped[str] = db.Column(db.String(256), nullable=False)
+    updated_from_strava_at: Mapped[datetime] = db.Column(db.DateTime, nullable=False)
 
-    strava_id = db.Column(db.BigInteger, nullable=False, index=True, unique=True)
-    strava_raw = db.Column(db.JSON(), nullable=False)
-    strava_token_id = db.Column(
+    strava_id: Mapped[int] = db.Column(
+        db.BigInteger, nullable=False, index=True, unique=True
+    )
+    strava_raw: Mapped[dict] = db.Column(db.JSON(), nullable=False)
+    strava_token_id: Mapped[int] = db.Column(
         db.Integer, db.ForeignKey("strava_token.id"), index=True
     )
 
     strava_token: Mapped[StravaToken] = db.relationship(
         "StravaToken", backref="athlete"
-    )
+    )  # type: ignore
 
     @classmethod
     def get_by_strava_id_or_404(cls, strava_id: int) -> Athlete:
