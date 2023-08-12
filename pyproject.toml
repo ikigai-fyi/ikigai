@@ -49,3 +49,9 @@ dev-dependencies = [
 
 [tool.hatch.metadata]
 allow-direct-references = true
+
+[tool.mypy]
+
+[[tool.mypy.overrides]]
+module = "stravalib.*,factory.*,geopy.geocoders.*,zappa.asynchronous.*,sendblue.*"
+ignore_missing_imports = True
