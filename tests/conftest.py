@@ -80,7 +80,7 @@ def db_session(db):
     transaction = connection.begin()
 
     options = {"bind": connection, "binds": {}, "autoflush": False}
-    session = db._make_scoped_session(options)
+    session = db._make_scoped_session(options)  # noqa: SLF001
 
     db.session = session
 
