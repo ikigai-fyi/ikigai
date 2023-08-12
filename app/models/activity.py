@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy.orm import RelationshipProperty, Mapped
+from sqlalchemy.orm import Mapped
 
 from pydantic.datetime_parse import parse_datetime
 from app import db
@@ -34,8 +34,8 @@ class Activity(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     athlete_id = db.Column(
         db.Integer, db.ForeignKey("athlete.id"), index=True, nullable=False
     )
-    athlete: RelationshipProperty[Athlete] = db.relationship(
-        "Athlete", backref="activities"
+    athlete: Mapped[Athlete] = db.relationship(
+        "Athlete", backref="activities"  # type: ignore
     )
 
     @classmethod
