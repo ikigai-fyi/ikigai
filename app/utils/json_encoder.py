@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 def _default(obj):
     # Serialize date and datetime objects to ISO 8601
-    if isinstance(obj, date) or isinstance(obj, datetime) or isinstance(obj, time):
+    if isinstance(obj, date | datetime | time):
         return obj.isoformat()
 
     # Serialize Decimal objects to floats
