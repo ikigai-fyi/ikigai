@@ -35,7 +35,7 @@ SQLALCHEMY_DATABASE_URI="postgresql+psycopg://admin:admin@localhost:5432/ikigai"
 ### Enable the virtual environment
 
 ```
-pipenv sync --dev && pipenv shell
+rye sync && rye shell
 ```
 
 ### Running the server
