@@ -8,7 +8,11 @@ from .activity import fetch_and_store_activity
 
 def handle_strava_webhook(input: StravaWebhookInput):
     current_app.logger.info(
-        f"Received Strava webhook: {input.object_type.value}:{input.aspect_type.value}",
+        "Received Strava webhook",
+        extra={
+            "object_type": input.object_type.value,
+            "aspect_type": input.aspect_type.value,
+        },
     )
 
     if input.is_create_activity or input.is_update_activity:
@@ -17,4 +21,4 @@ def handle_strava_webhook(input: StravaWebhookInput):
         try:
             fetch_and_store_activity(input.object_id, athlete)
         except Exception as e:  # noqa: BLE001
-            current_app.logger.warn("Failed to process Strava webhook", exc_info=e)
+            current_app.logger.warning("Failed to process Strava webhook", exc_info=e)
