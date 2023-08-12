@@ -58,8 +58,8 @@ force-exclude = true
 [tool.mypy]
 [[tool.mypy.overrides]]
 module = "stravalib.*,factory.*,geopy.geocoders.*,zappa.asynchronous.*,sendblue.*"
-ignore_missing_imports = True
+ignore_missing_imports = true
 
-[tool.pytest]
-testpaths = tests
-addopts = -vv
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-vv"
