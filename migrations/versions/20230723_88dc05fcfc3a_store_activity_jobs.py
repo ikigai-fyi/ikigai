@@ -34,7 +34,9 @@ def upgrade():
     )
     with op.batch_alter_table("activity_fetch_job", schema=None) as batch_op:
         batch_op.create_index(
-            batch_op.f("ix_activity_fetch_job_athlete_id"), ["athlete_id"], unique=False
+            batch_op.f("ix_activity_fetch_job_athlete_id"),
+            ["athlete_id"],
+            unique=False,
         )
 
     # ### end Alembic commands ###

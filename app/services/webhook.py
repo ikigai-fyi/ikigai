@@ -8,7 +8,7 @@ from .activity import fetch_and_store_activity
 
 def handle_strava_webhook(input: StravaWebhookInput):
     current_app.logger.info(
-        f"Received Strava webhook: {input.object_type.value}:{input.aspect_type.value}"
+        f"Received Strava webhook: {input.object_type.value}:{input.aspect_type.value}",
     )
 
     if input.is_create_activity or input.is_update_activity:

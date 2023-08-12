@@ -24,15 +24,21 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     updated_from_strava_at: Mapped[datetime] = db.Column(db.DateTime, nullable=False)
 
     strava_id: Mapped[int] = db.Column(
-        db.BigInteger, nullable=False, index=True, unique=True
+        db.BigInteger,
+        nullable=False,
+        index=True,
+        unique=True,
     )
     strava_raw: Mapped[dict] = db.Column(db.JSON(), nullable=False)
     strava_token_id: Mapped[int] = db.Column(
-        db.Integer, db.ForeignKey("strava_token.id"), index=True
+        db.Integer,
+        db.ForeignKey("strava_token.id"),
+        index=True,
     )
 
     strava_token: Mapped[StravaToken] = db.relationship(
-        "StravaToken", backref="athlete"
+        "StravaToken",
+        backref="athlete",
     )  # type: ignore
 
     @classmethod
@@ -46,7 +52,7 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     @classmethod
     def update_or_create(cls, strava_athlete: StravaAthlete) -> tuple[Athlete, bool]:
         athlete = Athlete.query.filter(
-            Athlete.strava_id == strava_athlete.id
+            Athlete.strava_id == strava_athlete.id,
         ).one_or_none()
 
         created = False

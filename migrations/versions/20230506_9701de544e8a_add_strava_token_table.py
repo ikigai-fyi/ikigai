@@ -34,7 +34,9 @@ def upgrade():
         batch_op.drop_constraint("uq_athlete_strava_access_token", type_="unique")
         batch_op.drop_constraint("uq_athlete_strava_refresh_token", type_="unique")
         batch_op.create_index(
-            batch_op.f("ix_athlete_strava_token_id"), ["strava_token_id"], unique=False
+            batch_op.f("ix_athlete_strava_token_id"),
+            ["strava_token_id"],
+            unique=False,
         )
         batch_op.create_foreign_key(
             batch_op.f("fk_athlete_strava_token_id_strava_token"),
@@ -59,7 +61,7 @@ def downgrade():
                 sa.VARCHAR(length=128),
                 autoincrement=False,
                 nullable=False,
-            )
+            ),
         )
         batch_op.add_column(
             sa.Column(
@@ -67,7 +69,7 @@ def downgrade():
                 postgresql.TIMESTAMP(),
                 autoincrement=False,
                 nullable=False,
-            )
+            ),
         )
         batch_op.add_column(
             sa.Column(
@@ -75,7 +77,7 @@ def downgrade():
                 sa.VARCHAR(length=128),
                 autoincrement=False,
                 nullable=False,
-            )
+            ),
         )
         batch_op.add_column(
             sa.Column(
@@ -83,17 +85,20 @@ def downgrade():
                 sa.VARCHAR(length=128),
                 autoincrement=False,
                 nullable=False,
-            )
+            ),
         )
         batch_op.drop_constraint(
-            batch_op.f("fk_athlete_strava_token_id_strava_token"), type_="foreignkey"
+            batch_op.f("fk_athlete_strava_token_id_strava_token"),
+            type_="foreignkey",
         )
         batch_op.drop_index(batch_op.f("ix_athlete_strava_token_id"))
         batch_op.create_unique_constraint(
-            "uq_athlete_strava_refresh_token", ["strava_refresh_token"]
+            "uq_athlete_strava_refresh_token",
+            ["strava_refresh_token"],
         )
         batch_op.create_unique_constraint(
-            "uq_athlete_strava_access_token", ["strava_access_token"]
+            "uq_athlete_strava_access_token",
+            ["strava_access_token"],
         )
         batch_op.drop_column("strava_token_id")
 

@@ -39,7 +39,8 @@ def fetch_and_store_activities_async(athlete_id: int):
         is_not_stored = Activity.get_by_strava_id(activity.id) is None
         if is_not_stored and activity.total_photo_count:
             job = ActivityFetchJob(
-                athlete_id=athlete.id, activity_strava_id=activity.id
+                athlete_id=athlete.id,
+                activity_strava_id=activity.id,
             )
             job.add(commit=True)
 
@@ -98,7 +99,7 @@ def send_welcome_message_async(athlete_id: int):
                 "gentle",
                 "loud",
                 "slam",
-            ]
+            ],
         ),
         # status_callback="https://example.com/callback", # We will see this later
     )

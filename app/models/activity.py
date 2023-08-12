@@ -31,10 +31,14 @@ class Activity(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     strava_raw = db.Column(db.JSON(), nullable=False)
 
     athlete_id = db.Column(
-        db.Integer, db.ForeignKey("athlete.id"), index=True, nullable=False
+        db.Integer,
+        db.ForeignKey("athlete.id"),
+        index=True,
+        nullable=False,
     )
     athlete: Mapped[Athlete] = db.relationship(
-        "Athlete", backref="activities"  # type: ignore
+        "Athlete",
+        backref="activities",  # type: ignore
     )
 
     @classmethod
@@ -43,7 +47,10 @@ class Activity(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
 
     @classmethod
     def update_or_create_from_strava(
-        cls, strava_activity: dict, city: str, athlete_id: int
+        cls,
+        strava_activity: dict,
+        city: str,
+        athlete_id: int,
     ) -> Activity:
         activity = cls.get_by_strava_id(strava_activity["id"])
         if not activity:
@@ -57,7 +64,7 @@ class Activity(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
         activity.sport_type = strava_activity["sport_type"]
         activity.elapsed_time_in_seconds = strava_activity["moving_time"]
         activity.start_datetime = parse_datetime(strava_activity["start_date"]).replace(
-            tzinfo=None
+            tzinfo=None,
         )
         activity.city = city
         activity.picture_url = picture_url  # type: ignore

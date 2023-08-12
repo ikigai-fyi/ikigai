@@ -11,7 +11,10 @@ class ActivityFetchJob(db.Model, BaseModelMixin):  # type: ignore
     __tablename__ = "activity_fetch_job"
 
     athlete_id = db.Column(
-        db.Integer, db.ForeignKey("athlete.id"), index=True, nullable=False
+        db.Integer,
+        db.ForeignKey("athlete.id"),
+        index=True,
+        nullable=False,
     )
     activity_strava_id = db.Column(db.BigInteger, nullable=False)
     done_at = db.Column(db.DateTime)

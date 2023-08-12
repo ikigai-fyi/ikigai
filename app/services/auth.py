@@ -23,7 +23,10 @@ def login_with_strava(input: StravaLoginInput) -> StravaLoginOutput:
 
     athlete, created = Athlete.update_or_create(strava_athlete)
     athlete.update_strava_token(
-        access_token, response["expires_at"], response["refresh_token"], input.scope
+        access_token,
+        response["expires_at"],
+        response["refresh_token"],
+        input.scope,
     )
 
     # FIXME: this does not quite work yet

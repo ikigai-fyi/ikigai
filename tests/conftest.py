@@ -56,14 +56,14 @@ def db(app):
         raise RuntimeError(
             f"ERROR - your target database {_db.engine.url}"
             "doesn't look like a test DB. "
-            "To avoid it to be fully dropped, I'm stopping the test here.."
+            "To avoid it to be fully dropped, I'm stopping the test here..",
         )
 
     try:
         _db.engine.connect()
     except sqlalchemy.exc.OperationalError as e:
         raise RuntimeError(
-            f"ERROR - cannot connect to database at {_db.engine.url}. It is running..?"
+            f"ERROR - cannot connect to database at {_db.engine.url}. It is running..?",
         ) from e
     _db.create_all()
 

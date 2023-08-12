@@ -128,7 +128,9 @@ convention = {
 
 metadata = MetaData(naming_convention=convention)
 db = SQLAlchemy(
-    model_class=_BaseModel, metadata=metadata, session_options={"autoflush": False}
+    model_class=_BaseModel,
+    metadata=metadata,
+    session_options={"autoflush": False},
 )
 migrate = Migrate()
 jwt = JWTManager()

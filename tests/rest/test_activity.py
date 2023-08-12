@@ -26,7 +26,7 @@ def test_get_random_activity(
         "strava_id": "9024223766",
         # Deprecated
         "picture_urls": [
-            "https://dgtzuqphqg23d.cloudfront.net/b7G42pDWBelvNgJI1g7GKb1lnKuUB9DEUZ77IZF-qRs-768x576.jpg"
+            "https://dgtzuqphqg23d.cloudfront.net/b7G42pDWBelvNgJI1g7GKb1lnKuUB9DEUZ77IZF-qRs-768x576.jpg",
         ],
     }
 
