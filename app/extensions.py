@@ -80,7 +80,8 @@ def register_error_handler(app: Flask):
         if isinstance(e, BaseError):
             sentry_sdk.capture_exception(e)
             return e.to_dict(), e.HTTP_STATUS
-        elif isinstance(e, HTTPException):
+
+        if isinstance(e, HTTPException):
             # werkzeug.exceptions.HTTPException are Flask/Werkzeug exception
             # They are usually used by libraries
             # Some helpful headers are automatically added by Werkzeug
