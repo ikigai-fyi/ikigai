@@ -77,14 +77,14 @@ def process_activity_fetch_job_async(job_id: int | None = None):
 @with_app_context()
 def send_welcome_message_async(athlete_id: int):
     athlete: Athlete = Athlete.get_by_id(athlete_id)
-    args = dict(
-        numbers=[
+    args = {
+        "numbers": [
             current_app.config["PHONE_NUMBER_VINCENT"],
             current_app.config["PHONE_NUMBER_PAUL"],
         ],
-        content=f"Bienvenue à... {athlete.first_name}! 🤙",
-        media_url=athlete.picture_url,
-        send_style=random.choice(
+        "content": f"Bienvenue à... {athlete.first_name}! 🤙",
+        "media_url": athlete.picture_url,
+        "send_style": random.choice(
             [
                 "celebration",
                 "shooting_star",
@@ -102,7 +102,7 @@ def send_welcome_message_async(athlete_id: int):
             ],
         ),
         # status_callback="https://example.com/callback", # We will see this later
-    )
+    }
 
     try:
         Sendblue(

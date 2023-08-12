@@ -79,7 +79,7 @@ def db_session(db):
     connection = db.engine.connect()
     transaction = connection.begin()
 
-    options = dict(bind=connection, binds={}, autoflush=False)
+    options = {"bind": connection, "binds": {}, "autoflush": False}
     session = db._make_scoped_session(options)
 
     db.session = session

@@ -89,7 +89,7 @@ def register_error_handler(app: Flask):
             if e.code >= 500:
                 sentry_sdk.capture_exception(e)
 
-            headers = {k: v for k, v in e.get_headers()}
+            headers = dict(e.get_headers())
             headers.pop("Content-Type")
             return (
                 {
