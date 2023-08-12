@@ -35,7 +35,7 @@ def client(app):
 
 
 @event.listens_for(Engine, "connect")
-def set_sqlite_pragma(dbapi_connection, connection_record):
+def set_sqlite_pragma(dbapi_connection, _):
     # Add support for ON DELETE CASCADE when testing with sqlite
     # https://docs.sqlalchemy.org/en/13/dialects/sqlite.html#foreign-key-support
     if current_app.config["APP_ENV"] == "sqlite_testing":

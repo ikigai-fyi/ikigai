@@ -1,14 +1,14 @@
+import pytest
+
 from app.models.activity import Activity
 from tests.factory.athlete import AthleteFactory
 from tests.fixtures.resources.run import RUN_WITH_PICTURES_DETAIL
 
 
-def test_get_random_activity(
-    client,
-    get_activities_response_mock_run,
-    get_run_activity_response_mock_run,
-    get_reverse_geocoding_mock,
-):
+@pytest.mark.usefixtures(
+    "get_activities_response_mock_run, get_run_activity_response_mock_run, get_reverse_geocoding_mock",  # noqa: E501
+)
+def test_get_random_activity(client):
     athlete = AthleteFactory()
     response = client.authenticated(athlete).get("/rest/activities/random")
 
@@ -49,10 +49,8 @@ def test_get_random_activity(
     assert activity.athlete == athlete
 
 
-def test_get_random_activity_no_activity(
-    client,
-    get_activities_response_mock_no_activity,
-):
+@pytest.mark.usefixtures("get_activities_response_mock_no_activity")
+def test_get_random_activity_no_activity(client):
     athlete = AthleteFactory()
     response = client.authenticated(athlete).get("/rest/activities/random")
 
@@ -63,10 +61,8 @@ def test_get_random_activity_no_activity(
     }
 
 
-def test_get_random_activity_no_activity_with_picture(
-    client,
-    get_activities_response_mock_no_picture,
-):
+@pytest.mark.usefixtures("get_activities_response_mock_no_picture")
+def test_get_random_activity_no_activity_with_picture(client):
     athlete = AthleteFactory()
     response = client.authenticated(athlete).get("/rest/activities/random")
 

@@ -1,4 +1,5 @@
 import faker
+import pytest
 
 from tests.factory.activity import Activity, ActivityFactory
 from tests.factory.athlete import AthleteFactory
@@ -11,7 +12,8 @@ from tests.factory.strava_webhook import (
 fake = faker.Faker()
 
 
-def test_webhook_validation_unauthorized(client, app):
+@pytest.mark.usefixtures("app")
+def test_webhook_validation_unauthorized(client):
     response = client.get(
         f"/rest/webhooks/strava?hub.verify_token={fake.pystr()}&hub.challenge=challenge&hub.mode=subscribe",
     )
@@ -39,12 +41,10 @@ def test_webhook_unauthorized(client, app):
     assert response.status_code == 401
 
 
-def test_webhook_create_activity(
-    client,
-    app,
-    get_run_activity_response_mock_run,
-    get_reverse_geocoding_mock,
-):
+@pytest.mark.usefixtures(
+    "get_run_activity_response_mock_run, get_reverse_geocoding_mock",
+)
+def test_webhook_create_activity(client, app):
     athlete = AthleteFactory()
     webhook_input = StravaWebhookInputFactory(
         object_type=StravaWebhookObjectType.ACTIVITY,
@@ -58,12 +58,10 @@ def test_webhook_create_activity(
     assert Activity.get_by_strava_id(9024223766)
 
 
-def test_webhook_update_activity(
-    client,
-    app,
-    get_bike_activity_response_mock_run,
-    get_reverse_geocoding_mock,
-):
+@pytest.mark.usefixtures(
+    "get_bike_activity_response_mock_run, get_reverse_geocoding_mock",
+)
+def test_webhook_update_activity(client, app):
     athlete = AthleteFactory()
     activity = ActivityFactory(strava_id=9033948628, athlete=athlete, updated_at=None)
     webhook_input = StravaWebhookInputFactory(
