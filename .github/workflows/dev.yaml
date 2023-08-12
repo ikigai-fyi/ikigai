@@ -52,7 +52,9 @@ jobs:
         with:
           python-version: "3.9"
       - name: Create and activate virtual env, required for Zappa
-        run: python -m venv .venv && source .venv/bin/activate
+        run: | 
+          python -m venv .venv
+          source .venv/bin/activate
       - name: Install dependencies
         run: pip install -r requirements.lock
       - name: Create AWS configuration file
