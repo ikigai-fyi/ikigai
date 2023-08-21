@@ -1,5 +1,6 @@
 import random
 from functools import wraps
+from urllib.parse import urljoin
 
 import sentry_sdk
 from flask import current_app
@@ -101,7 +102,10 @@ def send_welcome_message_async(athlete_id: int):
                 "slam",
             ],
         ),
-        # status_callback="https://example.com/callback", # We will see this later
+        "status_callback": urljoin(
+            current_app.config["SELF_URL"],
+            "/rest/webhooks/sendblue/status",
+        ),
     }
 
     try:

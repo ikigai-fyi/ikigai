@@ -2,6 +2,7 @@ import os
 
 
 class Config:
+    SELF_URL = "localhost"
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 
     SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI")
@@ -30,11 +31,13 @@ class Config:
 class ProdConfig(Config):
     APP_ENV = "prod"
     SENTRY_DSN = os.getenv("SENTRY_DSN")
+    SELF_URL = "https://api.ikigai.fyi"
 
 
 class DevConfig(Config):
     APP_ENV = "dev"
     SENTRY_DSN = os.getenv("SENTRY_DSN")
+    SELF_URL = "https://api-dev.ikigai.fyi"
 
 
 class LocalConfig(Config):

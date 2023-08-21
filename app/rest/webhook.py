@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, jsonify
+from flask import Blueprint, current_app, jsonify, request
 
 from app.extensions import spectree
 from app.schemas.inputs.webhook import StravaWebhookInput, StravaWebhookValidationInput
@@ -27,4 +27,11 @@ def ep_strava_webhook(json: StravaWebhookInput):
         raise UnauthorizedError
 
     handle_strava_webhook(json)
+    return "ok"
+
+
+@webhook.post("/sendblue/status")
+@spectree.validate()
+def ep_sendblue_status_webhook():
+    current_app.logger.info("Received Sendblue status callback", extra=request.json)
     return "ok"
