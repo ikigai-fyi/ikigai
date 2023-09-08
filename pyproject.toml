@@ -59,7 +59,7 @@ force-exclude = true
 
 [tool.mypy]
 [[tool.mypy.overrides]]
-module = "stravalib.*,factory.*,geopy.geocoders.*,zappa.asynchronous.*,sendblue.*,tests.pytest.fixtures.nominatim.*,tests.pytest.fixtures.strava.*,requests.*"
+module = "stravalib.*,factory.*,geopy.geocoders.*,zappa.asynchronous.*,tests.pytest.fixtures.nominatim.*,tests.pytest.fixtures.strava.*,requests.*"
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

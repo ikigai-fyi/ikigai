@@ -16,8 +16,7 @@ jobs:
       STRAVA_WEBHOOK_SUBSCRIPTION_ID: ${{ secrets.STRAVA_WEBHOOK_SUBSCRIPTION_ID }}
       PHONE_NUMBER_PAUL: ${{ secrets.PHONE_NUMBER_PAUL }}
       PHONE_NUMBER_VINCENT: ${{ secrets.PHONE_NUMBER_VINCENT }}
-      SENDBLUE_API_KEY: ${{ secrets.SENDBLUE_API_KEY }}
-      SENDBLUE_API_SECRET: ${{ secrets.SENDBLUE_API_SECRET }}
+      TELEGRAM_BOT_API_KEY: ${{ secrets.TELEGRAM_BOT_API_KEY }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.10

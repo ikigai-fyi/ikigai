@@ -22,8 +22,7 @@ class Config:
 
     PHONE_NUMBER_PAUL = os.getenv("PHONE_NUMBER_PAUL")
     PHONE_NUMBER_VINCENT = os.getenv("PHONE_NUMBER_VINCENT")
-    SENDBLUE_API_KEY = os.getenv("SENDBLUE_API_KEY")
-    SENDBLUE_API_SECRET = os.getenv("SENDBLUE_API_SECRET")
+    TELEGRAM_BOT_API_KEY = os.getenv("TELEGRAM_BOT_API_KEY")
 
     JWT_ACCESS_TOKEN_EXPIRES = False  # FIXME
 
@@ -50,8 +49,7 @@ class TestingConfig(Config):
     STRAVA_WEBHOOK_VALIDATION_TOKEN = "STRAVA_WEBHOOK_VALIDATION_TOKEN"
     STRAVA_WEBHOOK_SUBSCRIPTION_ID = 1
     JWT_SECRET_KEY = "secret"
-    SENDBLUE_API_KEY = "key"
-    SENDBLUE_API_SECRET = "secret"
+    TELEGRAM_BOT_API_KEY = "key"
 
 
 class SQLiteTestingConfig(TestingConfig):
