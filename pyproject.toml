@@ -23,7 +23,6 @@ dependencies = [
     "spectree>=1.2.0",
     "flask-jwt-extended>=4.5.2",
     "geopy>=2.3.0",
-    "sendblue>=0.1.2"
 ]
 readme = "README.md"
 requires-python = ">= 3.10"
