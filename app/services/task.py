@@ -84,4 +84,6 @@ def send_welcome_message_async(athlete_id: int):
         "caption": f"Coucou... {athlete.first_name}! 🤙",
     }
 
+    current_app.logger.info("Sending Telegram message...")
     requests.post(url, json=params, timeout=10).raise_for_status()
+    current_app.logger.info("Telegram message sent")
