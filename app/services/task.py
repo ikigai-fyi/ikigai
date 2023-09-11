@@ -1,8 +1,11 @@
+import random
 from functools import wraps
+from urllib.parse import urljoin
 
 import requests
 import sentry_sdk
 from flask import current_app
+from sendblue import Sendblue
 from zappa.asynchronous import task
 
 from app import create_app
@@ -82,6 +85,11 @@ def send_welcome_message_async(athlete_id: int):
     except Exception as e:  # noqa: BLE001
         sentry_sdk.capture_exception(e)
 
+    try:
+        _send_welcome_message_on_imessage(athlete)
+    except Exception as e:  # noqa: BLE001
+        sentry_sdk.capture_exception(e)
+
 
 def _send_welcome_message_on_telegram(athlete: Athlete):
     url = f"https://api.telegram.org/bot{current_app.config['TELEGRAM_BOT_API_KEY']}/sendPhoto"
@@ -93,3 +101,40 @@ def _send_welcome_message_on_telegram(athlete: Athlete):
 
     response = requests.post(url, json=params, timeout=10)
     response.raise_for_status()
+
+
+def _send_welcome_message_on_imessage(athlete: Athlete):
+    args = {
+        "numbers": [
+            current_app.config["PHONE_NUMBER_VINCENT"],
+            current_app.config["PHONE_NUMBER_PAUL"],
+        ],
+        "content": f"Coucou... {athlete.first_name}! 🤙",
+        "media_url": athlete.picture_url,
+        "send_style": random.choice(
+            [
+                "celebration",
+                "shooting_star",
+                "fireworks",
+                "lasers",
+                "love",
+                "confetti",
+                "balloons",
+                "spotlight",
+                "echo",
+                "invisible",
+                "gentle",
+                "loud",
+                "slam",
+            ],
+        ),
+        "status_callback": urljoin(
+            current_app.config["SELF_URL"],
+            "/rest/webhooks/sendblue/status",
+        ),
+    }
+
+    Sendblue(
+        current_app.config["SENDBLUE_API_KEY"],
+        current_app.config["SENDBLUE_API_SECRET"],
+    ).send_group_message(args)
