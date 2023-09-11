@@ -49,7 +49,7 @@ jobs:
       - name: Update Zappa deployment
         run: |
           source .venv/bin/activate
-          zappa update dev
+          zappa update prod
       - name: Revoke Github actions IP to db security group
         if: ${{ steps.authorize_runner.outputs.exit_code }} == 0
         run: aws ec2 revoke-security-group-ingress --profile icloud --group-id sg-09604b54a891618b8 --protocol tcp --port 5432 --cidr ${{ steps.ip.outputs.ipv4 }}/32
