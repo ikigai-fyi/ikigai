@@ -2,9 +2,7 @@
 name = "ikigai"
 version = "1.0.0"
 description = "Ikigai backend"
-authors = [
-    { name = "Paul Nicolet" }
-]
+authors = [{ name = "Paul Nicolet" }]
 
 # boto3 frozen: https://stackoverflow.com/questions/75887656/botocore-package-in-lambda-python-3-9-runtime-return-error-cannot-import-name
 dependencies = [
@@ -23,6 +21,7 @@ dependencies = [
     "spectree>=1.2.0",
     "flask-jwt-extended>=4.5.2",
     "geopy>=2.3.0",
+    "sendblue>=0.1.2",
 ]
 readme = "README.md"
 requires-python = ">= 3.10"
@@ -52,14 +51,50 @@ allow-direct-references = true
 
 [tool.ruff]
 target-version = "py310"
-select = ["E", "F", "C90", "I", "N", "UP", "YTT", "BLE", "FBT", "B", "COM", "C4", "T10", "EXE", "ISC", "ICN", "G", "INP", "PIE", "T20", "PYI", "PT", "Q", "RSE", "RET", "SLF", "SIM", "TID", "ARG", "PTH", "PL", "PLE", "PLR", "PLW", "RUF"]
+select = [
+    "E",
+    "F",
+    "C90",
+    "I",
+    "N",
+    "UP",
+    "YTT",
+    "BLE",
+    "FBT",
+    "B",
+    "COM",
+    "C4",
+    "T10",
+    "EXE",
+    "ISC",
+    "ICN",
+    "G",
+    "INP",
+    "PIE",
+    "T20",
+    "PYI",
+    "PT",
+    "Q",
+    "RSE",
+    "RET",
+    "SLF",
+    "SIM",
+    "TID",
+    "ARG",
+    "PTH",
+    "PL",
+    "PLE",
+    "PLR",
+    "PLW",
+    "RUF",
+]
 ignore = ["RUF012"]
 extend-exclude = ["tests/fixtures/resources/*.py"]
 force-exclude = true
 
 [tool.mypy]
 [[tool.mypy.overrides]]
-module = "stravalib.*,factory.*,geopy.geocoders.*,zappa.asynchronous.*,tests.pytest.fixtures.nominatim.*,tests.pytest.fixtures.strava.*,requests.*"
+module = "stravalib.*,factory.*,geopy.geocoders.*,zappa.asynchronous.*,tests.pytest.fixtures.nominatim.*,tests.pytest.fixtures.strava.*,requests.*,sendblue.*"
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
