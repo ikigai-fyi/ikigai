@@ -1,6 +1,7 @@
 from functools import wraps
 
 import requests
+import sentry_sdk
 from flask import current_app
 from zappa.asynchronous import task
 
@@ -76,7 +77,13 @@ def process_activity_fetch_job_async(job_id: int | None = None):
 def send_welcome_message_async(athlete_id: int):
     athlete: Athlete = Athlete.get_by_id(athlete_id)
 
-    # Send the message
+    try:
+        _send_welcome_message_on_telegram(athlete)
+    except Exception as e:  # noqa: BLE001
+        sentry_sdk.capture_exception(e)
+
+
+def _send_welcome_message_on_telegram(athlete: Athlete):
     url = f"https://api.telegram.org/bot{current_app.config['TELEGRAM_BOT_API_KEY']}/sendPhoto"
     params = {
         "chat_id": -993067240,
