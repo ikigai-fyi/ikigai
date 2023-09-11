@@ -1,6 +1,7 @@
 from functools import wraps
 
 import requests
+import sentry_sdk
 from flask import current_app
 from zappa.asynchronous import task
 
@@ -85,7 +86,9 @@ def send_welcome_message_async(athlete_id: int):
     }
 
     current_app.logger.info("Sending Telegram message...")
+    sentry_sdk.capture_message("Sending Telegram message...")
     response = requests.post(url, json=params, timeout=10)
     current_app.logger.info(response.text)
     response.raise_for_status()
     current_app.logger.info("Telegram message sent")
+    sentry_sdk.capture_message("Telegram message sent")
