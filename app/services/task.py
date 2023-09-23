@@ -96,7 +96,7 @@ def _send_welcome_message_on_telegram(athlete: Athlete):
     params = {
         "chat_id": -993067240,
         "photo": athlete.picture_url,
-        "caption": f"Coucou... {athlete.first_name}! 🤙",
+        "caption": _format_welcome_message(athlete),
     }
 
     response = requests.post(url, json=params, timeout=10)
@@ -109,7 +109,7 @@ def _send_welcome_message_on_imessage(athlete: Athlete):
             current_app.config["PHONE_NUMBER_VINCENT"],
             current_app.config["PHONE_NUMBER_PAUL"],
         ],
-        "content": f"Coucou... {athlete.first_name}! 🤙",
+        "content": _format_welcome_message(athlete),
         "media_url": athlete.picture_url,
         "send_style": random.choice(
             [
@@ -138,3 +138,7 @@ def _send_welcome_message_on_imessage(athlete: Athlete):
         current_app.config["SENDBLUE_API_KEY"],
         current_app.config["SENDBLUE_API_SECRET"],
     ).send_group_message(args)
+
+
+def _format_welcome_message(athlete: Athlete) -> str:
+    return f"Bienvenue {athlete.first_name} {athlete.last_name}! 🫶 <https://www.strava.com/athletes/{athlete.strava_id}>"
