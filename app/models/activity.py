@@ -43,6 +43,28 @@ class Activity(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
 
     @property
     def has_custom_name(self) -> bool:
+        time_components = [
+            "morning",
+            "lunch",
+            "afternoon",
+            "evening",
+            "night",
+            "le matin",
+            "le midi",
+            "dans l'après-midi",
+            "en soirée",
+        ]
+
+        # We assume that Strava default naming is composed of
+        # "<time component> <activity>"" or "<activity> <time component>"
+        # The order depending on language
+        # So splitting by time component will give an array of exactly two elements:
+        # ['<activity>', ''] or ['', '<activity>']
+        for time_component in time_components:
+            splitted = self.name.lower().split(time_component)
+            if len(splitted) == 2 and "" in splitted:  # noqa: PLR2004
+                return False
+
         return True
 
     @classmethod
