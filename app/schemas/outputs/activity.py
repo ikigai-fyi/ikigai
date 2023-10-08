@@ -8,6 +8,7 @@ class ActivityOutput(BaseModel):
         orm_mode = True
 
     name: str
+    has_custom_name: bool
     sport_type: str
     elapsed_time_in_seconds: int
     start_datetime: datetime
