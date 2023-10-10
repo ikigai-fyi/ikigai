@@ -9,6 +9,7 @@ from flask_jwt_extended import create_access_token
 from responses import RequestsMock
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 from app import create_app
 from app.extensions import db as _db
@@ -79,9 +80,7 @@ def db_session(db):
     connection = db.engine.connect()
     transaction = connection.begin()
 
-    options = {"bind": connection, "binds": {}, "autoflush": False}
-    session = db._make_scoped_session(options)  # noqa: SLF001
-
+    session = scoped_session(sessionmaker(bind=connection))
     db.session = session
 
     yield session

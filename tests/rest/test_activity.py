@@ -35,7 +35,7 @@ def test_get_random_activity(client):
         ],
     }
 
-    activity = Activity.get_by_strava_id(9024223766)
+    activity = Activity.query.one()
 
     assert activity.sport_type == response.json["sport_type"]
     assert activity.elapsed_time_in_seconds == response.json["elapsed_time_in_seconds"]
