@@ -40,7 +40,9 @@ def get_random_activity() -> ActivityOutput:
         10,
         25,
     )
-    if current_app.config["APP_ENV"] == "prod" and paul_is_testing or vincent_is_older:
+    if current_app.config["APP_ENV"] == "prod" and (
+        paul_is_testing or vincent_is_older
+    ):
         output.name = "Joyeux anniv Bouboule ❤️"
         output.has_custom_name = True
 
