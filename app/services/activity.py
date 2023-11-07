@@ -1,7 +1,5 @@
 import random
-from datetime import date
 
-from flask import current_app
 from flask_jwt_extended import current_user
 from geopy.geocoders import Nominatim
 from stravalib.model import Activity as StravaActivity
@@ -32,21 +30,7 @@ def get_random_activity() -> ActivityOutput:
 
     strava_activity = random.choice(activities_with_picture)
     activity = fetch_and_store_activity(strava_activity.id, current_user)
-    output = ActivityOutput.from_orm(activity)
-
-    paul_is_testing = current_user.id == 1 and date.today() == date(2023, 10, 24)
-    vincent_is_older = current_user.id == 3 and date.today() == date(  # noqa: PLR2004
-        2023,
-        10,
-        25,
-    )
-    if current_app.config["APP_ENV"] == "prod" and (
-        paul_is_testing or vincent_is_older
-    ):
-        output.name = "Joyeux anniv Bouboule ❤️"
-        output.has_custom_name = True
-
-    return output
+    return ActivityOutput.from_orm(activity)
 
 
 def fetch_and_store_activity(strava_id: int, athlete: Athlete) -> Activity:
