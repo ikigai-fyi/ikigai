@@ -28,6 +28,13 @@ class ActivityFetchJob(db.Model, BaseModelMixin):  # type: ignore
         self.update()
 
     @classmethod
+    def create(cls, athlete_id: int, activity_strava_id: int) -> ActivityFetchJob:
+        return ActivityFetchJob(
+            athlete_id=athlete_id,
+            activity_strava_id=activity_strava_id,
+        ).add(commit=True)
+
+    @classmethod
     def get_job_to_process(cls) -> ActivityFetchJob | None:
         return ActivityFetchJob.query.filter(ActivityFetchJob.done_at.is_(None)).first()
 

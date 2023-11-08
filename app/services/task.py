@@ -37,10 +37,10 @@ def create_activities_fetch_jobs_async(athlete_id: int):
     activities_iterator = client.get_activities()
 
     jobs = [
-        ActivityFetchJob(
+        ActivityFetchJob.create(
             athlete_id=athlete.id,
             activity_strava_id=activity.id,
-        ).add(commit=True)
+        )
         for activity in activities_iterator
         if _should_create_job(activity)
     ]
