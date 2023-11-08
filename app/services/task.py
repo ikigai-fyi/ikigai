@@ -45,8 +45,8 @@ def create_activities_fetch_jobs_async(athlete_id: int):
         if _should_create_job(activity)
     ]
 
-    # Launch 10 random jobs now to preserve rate limiter
-    jobs_to_process_now = random.sample(jobs, min(10, len(jobs)))
+    # Launch a few random jobs now
+    jobs_to_process_now = random.sample(jobs, min(5, len(jobs)))
     for job in jobs_to_process_now:
         process_activity_fetch_job_async(job_id=job.id)
 
