@@ -5,7 +5,10 @@ from stravalib import Client
 from app.models.athlete import Athlete
 from app.schemas.inputs.auth import StravaLoginInput
 from app.schemas.outputs.auth import StravaLoginOutput
-from app.services.task import send_welcome_message_async
+from app.services.task import (
+    create_activities_fetch_jobs_async,
+    send_welcome_message_async,
+)
 
 
 def login_with_strava(input: StravaLoginInput) -> StravaLoginOutput:
@@ -29,10 +32,7 @@ def login_with_strava(input: StravaLoginInput) -> StravaLoginOutput:
         input.scope,
     )
 
-    # FIXME: this does not quite work yet
-    # Tasks are calling themselves until queue is empty,
-    # but AWS detects a recursive call and stops the chain after 5 calls-ish
-    # fetch_and_store_activities_async(athlete.id)
+    create_activities_fetch_jobs_async(athlete.id)
 
     if created:
         send_welcome_message_async(athlete.id)
