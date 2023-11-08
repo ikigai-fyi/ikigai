@@ -50,6 +50,8 @@ def create_activities_fetch_jobs_async(athlete_id: int):
     for job in jobs_to_process_now:
         process_activity_fetch_job_async(job_id=job.id)
 
+    athlete.update_created_activities_jobs_at()
+
 
 @task
 @with_app_context()

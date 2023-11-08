@@ -22,6 +22,9 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     last_name: Mapped[str] = db.Column(db.String(32), nullable=False)
     picture_url: Mapped[str] = db.Column(db.String(256), nullable=False)
     updated_from_strava_at: Mapped[datetime] = db.Column(db.DateTime, nullable=False)
+    created_activities_jobs_at: Mapped[datetime | None] = db.Column(
+        db.DateTime,
+    )
 
     strava_id: Mapped[int] = db.Column(
         db.BigInteger,
@@ -70,6 +73,10 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
         db.session.commit()
 
         return athlete, created
+
+    def update_created_activities_jobs_at(self):
+        self.created_activities_jobs_at = datetime.utcnow()
+        self.update()
 
     def update_strava_token(
         self,
