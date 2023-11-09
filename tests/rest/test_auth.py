@@ -1,3 +1,4 @@
+import random
 from http import HTTPStatus
 from unittest.mock import ANY, MagicMock
 
@@ -6,17 +7,21 @@ import pytest
 from app.models.activity import Activity
 from app.models.activity_fetch_job import ActivityFetchJob
 from app.models.athlete import Athlete
-from tests.fixtures.resources.run import RUN_WITH_PICTURES_PREVIEW
+from tests.fixtures.resources.bike import BIKE_WITH_PICTURES_DETAIL
+from tests.fixtures.resources.run import RUN_WITH_PICTURES_DETAIL
 
 
 @pytest.mark.usefixtures(
     "post_strava_token_response_mock",
     "get_strava_athlete_response_mock",
-    "get_activities_response_mock_run",
-    "get_run_activity_response_mock_run",
+    "get_activities_response_mock_run_and_bike",
+    "get_activity_response_mock_run",
+    "get_activity_response_mock_bike",
     "get_reverse_geocoding_mock",
 )
 def test_strava_login(client, monkeypatch):
+    random.seed(1)
+
     mock_update = MagicMock()
     monkeypatch.setattr(Athlete, "update_created_activities_jobs_at", mock_update)
 
@@ -40,14 +45,19 @@ def test_strava_login(client, monkeypatch):
         },
     }
 
+    # The two activities have been fetched
+    activities = Activity.query.all()
+    assert len(activities) == 2  # noqa: PLR2004
+
+    # Run first and bike after
+    assert activities[0].strava_id == RUN_WITH_PICTURES_DETAIL["id"]
+    assert activities[1].strava_id == BIKE_WITH_PICTURES_DETAIL["id"]
+
+    # Bike was fetched using the queue
     assert ActivityFetchJob.query.count() == 1
     job = ActivityFetchJob.query.one()
     assert job.done_at is not None
-    assert job.activity_strava_id == RUN_WITH_PICTURES_PREVIEW["id"]
-
-    assert Activity.query.count() == 1
-    activity = Activity.query.one()
-    assert activity.strava_id == RUN_WITH_PICTURES_PREVIEW["id"]
+    assert job.activity_strava_id == BIKE_WITH_PICTURES_DETAIL["id"]
 
     # FIXME: athlete is created in the endpoint but field update in the task
     # It seems they don't belong to the same session

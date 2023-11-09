@@ -3,7 +3,8 @@ from http import HTTPStatus
 import faker
 import pytest
 
-from tests.factory.activity import Activity, ActivityFactory
+from app.models.activity_fetch_job import ActivityFetchJob
+from tests.factory.activity import ActivityFactory
 from tests.factory.athlete import AthleteFactory
 from tests.factory.strava_webhook import (
     StravaWebhookAspectType,
@@ -43,10 +44,6 @@ def test_webhook_unauthorized(client, app):
     assert response.status_code == HTTPStatus.UNAUTHORIZED
 
 
-@pytest.mark.usefixtures(
-    "get_run_activity_response_mock_run",
-    "get_reverse_geocoding_mock",
-)
 def test_webhook_create_activity(client, app):
     athlete = AthleteFactory()
     webhook_input = StravaWebhookInputFactory(
@@ -58,13 +55,13 @@ def test_webhook_create_activity(client, app):
     )
     response = client.post("/rest/webhooks/strava", json=webhook_input.dict())
     assert response.status_code == HTTPStatus.OK
-    assert Activity.get_by_strava_id(9024223766)
+
+    job = ActivityFetchJob.query.one()
+    assert job.activity_strava_id == webhook_input.object_id
+    assert job.athlete_id == athlete.id
+    assert job.done_at is None
 
 
-@pytest.mark.usefixtures(
-    "get_bike_activity_response_mock_run",
-    "get_reverse_geocoding_mock",
-)
 def test_webhook_update_activity(client, app):
     athlete = AthleteFactory()
     activity = ActivityFactory(strava_id=9033948628, athlete=athlete, updated_at=None)
@@ -77,4 +74,8 @@ def test_webhook_update_activity(client, app):
     )
     response = client.post("/rest/webhooks/strava", json=webhook_input.dict())
     assert response.status_code == HTTPStatus.OK
-    assert Activity.get_by_strava_id(activity.strava_id).updated_at
+
+    job = ActivityFetchJob.query.one()
+    assert job.activity_strava_id == activity.strava_id
+    assert job.athlete_id == athlete.id
+    assert job.done_at is None
