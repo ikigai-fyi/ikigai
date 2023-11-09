@@ -7,9 +7,9 @@ from app.services import cron
 def with_app_context():
     def decorator(decorated_function):
         @wraps(decorated_function)
-        def wrapper(*args, **kwargs):
+        def wrapper():
             with create_app().app_context():
-                return decorated_function(*args, **kwargs)
+                return decorated_function()
 
         return wrapper
 
@@ -17,5 +17,5 @@ def with_app_context():
 
 
 @with_app_context()
-def consume_activities_fetch_queue(_):
+def consume_activities_fetch_queue():
     cron.consume_activities_fetch_queue()
