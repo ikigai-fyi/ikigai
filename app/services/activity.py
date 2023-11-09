@@ -16,6 +16,8 @@ from .client import get_strava_client
 
 
 def get_random_activity(athlete: Athlete) -> ActivityOutput:
+    athlete.update_last_active_at()
+
     candidates: list[Activity] = Activity.query.filter(
         Activity.athlete_id == athlete.id,
         Activity.picture_url.is_not(None),

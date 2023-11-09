@@ -38,3 +38,9 @@ def test_get_random_activity_no_activity_with_picture(client):
         "type": "NoRecentActivityWithPictureError",
         "message": "No recent activity has pictures to be dispayed",
     }
+
+
+def test_get_random_activity_last_active(client):
+    athlete = AthleteFactory(last_active_at=None)
+    client.authenticated(athlete).get("/rest/activities/random")
+    assert athlete.last_active_at is not None
