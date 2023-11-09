@@ -46,7 +46,8 @@
         "events": [
             {
                 "function": "app.zappa_events.consume_activities_fetch_queue",
-                "expression": "rate(15 minutes)"
+                "expression": "rate(15 minutes)",
+                "enabled": false
             }
         ]
     },
@@ -93,6 +94,12 @@
             ".cache",
             "__pycache__",
             "botocore"
+        ],
+        "events": [
+            {
+                "function": "app.zappa_events.consume_activities_fetch_queue",
+                "expression": "rate(15 minutes)"
+            }
         ]
     }
 }
