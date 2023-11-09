@@ -5,6 +5,7 @@ from stravalib import Client
 from app.models.athlete import Athlete
 from app.schemas.inputs.auth import StravaLoginInput
 from app.schemas.outputs.auth import StravaLoginOutput
+from app.services.activity import get_and_store_random_activity_from_strava
 from app.services.task import (
     create_activities_fetch_jobs_async,
     send_welcome_message_async,
@@ -32,9 +33,9 @@ def login_with_strava(input: StravaLoginInput) -> StravaLoginOutput:
         input.scope,
     )
 
-    create_activities_fetch_jobs_async(athlete.id)
-
     if created:
+        get_and_store_random_activity_from_strava(athlete)
+        create_activities_fetch_jobs_async(athlete.id)
         send_welcome_message_async(athlete.id)
 
     return StravaLoginOutput(

@@ -13,7 +13,7 @@ We use the following strategy to cache Strava activities and avoid making API ca
 📅 = let as future work
 
 1. ❌ **Upon account creation**:
-   1. ❌ Download one activity in sync to ensure user is served right away.
+   1. ✅ Download one activity in sync to ensure user is served right away.
    2. ✅ Download 5 activities async to ensure user have data if playing around a few seconds after login.
    3. ✅ Enqueue the rest in the job queue to ensure that ultimately we download all the backlog.
    4. ❌ Dequeue jobs async and periodically: 10 items every 15 minutes to comply with Strava rate limit (max 100 / 15 minutes, we let room for new incoming users).

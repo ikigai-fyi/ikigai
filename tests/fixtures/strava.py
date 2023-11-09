@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import pytest
 import responses
 
-from .resources.bike import BIKE_WITH_PICTURES_DETAIL
+from .resources.bike import BIKE_WITH_PICTURES_DETAIL, BIKE_WITH_PICTURES_PREVIEW
 from .resources.run import (
     RUN_WITH_PICTURES_DETAIL,
     RUN_WITH_PICTURES_PREVIEW,
@@ -55,6 +55,16 @@ def get_activities_response_mock_run(requests_mock):
 
 
 @pytest.fixture()
+def get_activities_response_mock_run_and_bike(requests_mock):
+    requests_mock.add(
+        responses.GET,
+        f"{STRAVA_API_URL}/athlete/activities",
+        json=[RUN_WITH_PICTURES_PREVIEW, BIKE_WITH_PICTURES_PREVIEW],
+    )
+    return requests_mock
+
+
+@pytest.fixture()
 def get_activities_response_mock_no_activity(requests_mock):
     requests_mock.add(
         responses.GET,
@@ -75,7 +85,7 @@ def get_activities_response_mock_no_picture(requests_mock):
 
 
 @pytest.fixture()
-def get_run_activity_response_mock_run(requests_mock):
+def get_activity_response_mock_run(requests_mock):
     requests_mock.add(
         responses.GET,
         re.compile(f"{STRAVA_API_URL}/activities/{RUN_WITH_PICTURES_DETAIL['id']}"),
@@ -85,10 +95,10 @@ def get_run_activity_response_mock_run(requests_mock):
 
 
 @pytest.fixture()
-def get_bike_activity_response_mock_run(requests_mock):
+def get_activity_response_mock_bike(requests_mock):
     requests_mock.add(
         responses.GET,
-        re.compile(f"{STRAVA_API_URL}/activities/{BIKE_WITH_PICTURES_DETAIL['id']}"),
+        re.compile(f"{STRAVA_API_URL}/activities/{BIKE_WITH_PICTURES_PREVIEW['id']}"),
         json=BIKE_WITH_PICTURES_DETAIL,
     )
     return requests_mock

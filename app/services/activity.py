@@ -1,6 +1,5 @@
 import random
 
-from flask_jwt_extended import current_user
 from geopy.geocoders import Nominatim
 from stravalib.model import Activity as StravaActivity
 
@@ -13,11 +12,18 @@ from app.utils.error import (
     NoRecentActivityWithPictureError,
 )
 
-from .client import get_logged_strava_client, get_strava_client
+from .client import get_strava_client
 
 
-def get_random_activity() -> ActivityOutput:
-    client = get_logged_strava_client()
+def get_and_store_random_activity_from_strava(athlete: Athlete) -> ActivityOutput:
+    strava_activity = get_random_activity_from_strava(athlete)
+    activity = fetch_and_store_activity(strava_activity.id, athlete)
+    return ActivityOutput.from_orm(activity)
+
+
+def get_random_activity_from_strava(athlete: Athlete) -> StravaActivity:
+    client = get_strava_client(athlete)
+
     activities: list[StravaActivity] = list(client.get_activities(limit=100))
     if not activities:
         raise NoActivityError
@@ -28,9 +34,7 @@ def get_random_activity() -> ActivityOutput:
     if not activities_with_picture:
         raise NoRecentActivityWithPictureError
 
-    strava_activity = random.choice(activities_with_picture)
-    activity = fetch_and_store_activity(strava_activity.id, current_user)
-    return ActivityOutput.from_orm(activity)
+    return random.choice(activities_with_picture)
 
 
 def fetch_and_store_activity(strava_id: int, athlete: Athlete) -> Activity:
