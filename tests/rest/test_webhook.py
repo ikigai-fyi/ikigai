@@ -1,3 +1,4 @@
+from datetime import datetime
 from http import HTTPStatus
 
 import faker
@@ -60,6 +61,7 @@ def test_webhook_create_activity(client, app):
     assert job.activity_strava_id == webhook_input.object_id
     assert job.athlete_id == athlete.id
     assert job.done_at is None
+    assert job.do_after > datetime.utcnow()
 
 
 def test_webhook_update_activity(client, app):
@@ -79,3 +81,4 @@ def test_webhook_update_activity(client, app):
     assert job.activity_strava_id == activity.strava_id
     assert job.athlete_id == athlete.id
     assert job.done_at is None
+    assert job.do_after < datetime.utcnow()

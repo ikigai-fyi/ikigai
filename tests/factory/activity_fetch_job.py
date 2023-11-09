@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import factory
 
 from app.models.activity_fetch_job import ActivityFetchJob
@@ -14,4 +16,5 @@ class ActivityFetchJobFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     athlete = factory.SubFactory(AthleteFactory)
     activity_strava_id = 1234
+    do_after = datetime.utcnow()
     done_at = None
