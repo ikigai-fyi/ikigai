@@ -5,7 +5,7 @@ from spectree.response import Response
 from app.extensions import spectree
 from app.services.activity import (
     ActivityOutput,
-    get_and_store_random_activity_from_strava,
+    get_random_activity,
 )
 
 activity = Blueprint("activity", __name__, url_prefix="/activities")
@@ -15,4 +15,4 @@ activity = Blueprint("activity", __name__, url_prefix="/activities")
 @spectree.validate(resp=Response(HTTP_200=ActivityOutput))
 @jwt_required()
 def ep_get_random_activity():
-    return jsonify(get_and_store_random_activity_from_strava(current_user))
+    return jsonify(get_random_activity(current_user))

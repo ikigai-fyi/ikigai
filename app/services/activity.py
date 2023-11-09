@@ -15,6 +15,18 @@ from app.utils.error import (
 from .client import get_strava_client
 
 
+def get_random_activity(athlete: Athlete) -> ActivityOutput:
+    candidates: list[Activity] = Activity.query.filter(
+        Activity.athlete_id == athlete.id,
+        Activity.picture_url.is_not(None),
+    ).all()
+    if not candidates:
+        raise NoRecentActivityWithPictureError
+
+    activity = random.choice(candidates)
+    return ActivityOutput.from_orm(activity)
+
+
 def get_and_store_random_activity_from_strava(athlete: Athlete) -> ActivityOutput:
     strava_activity = get_random_activity_from_strava(athlete)
     activity = fetch_and_store_activity(strava_activity.id, athlete)
