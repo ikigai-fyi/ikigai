@@ -1,3 +1,4 @@
+import os
 import random
 from functools import wraps
 from urllib.parse import urljoin
@@ -21,6 +22,11 @@ def with_app_context():
     def decorator(decorated_function):
         @wraps(decorated_function)
         def wrapper(*args, **kwargs):
+            # Creating a new context during testing will make objects created in test
+            # in a different session than objects created in the call itself
+            if os.getenv("APP_CONFIG") not in {"dev", "prod"}:
+                return decorated_function(*args, **kwargs)
+
             with create_app().app_context():
                 return decorated_function(*args, **kwargs)
 
@@ -48,20 +54,15 @@ def create_activities_fetch_jobs_async(athlete_id: int):
     # Launch a few random jobs now
     jobs_to_process_now = random.sample(jobs, min(5, len(jobs)))
     for job in jobs_to_process_now:
-        process_activity_fetch_job_async(job_id=job.id)
+        process_activity_fetch_job_async(job.id)
 
     athlete.update_created_activities_jobs_at()
 
 
 @task
 @with_app_context()
-def process_activity_fetch_job_async(job_id: int | None = None):
-    job: ActivityFetchJob | None
-    if job_id:
-        job = ActivityFetchJob.get_by_id(job_id)
-    else:
-        job = ActivityFetchJob.get_job_to_process()
-
+def process_activity_fetch_job_async(job_id: int):
+    job = ActivityFetchJob.get_by_id(job_id)
     if not job:
         return
 
