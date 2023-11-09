@@ -20,6 +20,7 @@ class ActivityFetchJob(db.Model, BaseModelMixin):  # type: ignore
         nullable=False,
     )
     activity_strava_id = db.Column(db.BigInteger, nullable=False, index=True)
+    do_after = db.Column(db.DateTime, nullable=False)
     done_at = db.Column(db.DateTime)
 
     athlete: Mapped[Athlete] = db.relationship(
@@ -36,16 +37,25 @@ class ActivityFetchJob(db.Model, BaseModelMixin):  # type: ignore
         self.update()
 
     @classmethod
-    def create(cls, athlete_id: int, activity_strava_id: int) -> ActivityFetchJob:
+    def create(
+        cls,
+        athlete_id: int,
+        activity_strava_id: int,
+        do_after: datetime,
+    ) -> ActivityFetchJob:
         return ActivityFetchJob(
             athlete_id=athlete_id,
             activity_strava_id=activity_strava_id,
+            do_after=do_after,
         ).add(commit=True)
 
     @classmethod
     def get_jobs_to_process(cls, limit: int) -> list[ActivityFetchJob]:
         return (
-            ActivityFetchJob.query.filter(ActivityFetchJob.done_at.is_(None))
+            ActivityFetchJob.query.filter(
+                ActivityFetchJob.done_at.is_(None),
+                ActivityFetchJob.do_after < datetime.utcnow(),
+            )
             .limit(limit)
             .all()
         )
@@ -59,7 +69,3 @@ class ActivityFetchJob(db.Model, BaseModelMixin):  # type: ignore
             ActivityFetchJob.activity_strava_id == activity_strava_id,
             ActivityFetchJob.done_at.is_(None),
         ).first()
-
-    @classmethod
-    def is_queue_empty(cls) -> bool:
-        return cls.get_job_to_process() is None

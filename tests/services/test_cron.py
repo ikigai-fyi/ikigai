@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pytest
 
@@ -31,6 +31,12 @@ def test_consume_activities_fetch_queue():
         athlete=athlete,
         activity_strava_id=HIKE_WITH_PICTURES_DETAIL["id"],
         done_at=datetime.now(),
+    )
+    ActivityFetchJobFactory(
+        athlete=athlete,
+        activity_strava_id=HIKE_WITH_PICTURES_DETAIL["id"],
+        do_after=datetime.now() + timedelta(hours=1),
+        done_at=None,
     )
 
     consume_activities_fetch_queue()
