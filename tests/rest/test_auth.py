@@ -1,6 +1,6 @@
 import random
 from http import HTTPStatus
-from unittest.mock import ANY, MagicMock
+from unittest.mock import ANY
 
 import pytest
 
@@ -19,11 +19,8 @@ from tests.fixtures.resources.run import RUN_WITH_PICTURES_DETAIL
     "get_activity_response_mock_bike",
     "get_reverse_geocoding_mock",
 )
-def test_strava_login(client, monkeypatch):
+def test_strava_login(client):
     random.seed(1)
-
-    mock_update = MagicMock()
-    monkeypatch.setattr(Athlete, "update_created_activities_jobs_at", mock_update)
 
     response = client.post(
         "/rest/auth/login/strava",
@@ -59,9 +56,5 @@ def test_strava_login(client, monkeypatch):
     assert job.done_at is not None
     assert job.activity_strava_id == BIKE_WITH_PICTURES_DETAIL["id"]
 
-    # FIXME: athlete is created in the endpoint but field update in the task
-    # It seems they don't belong to the same session
-    # So update doesn't work in tests, we use a workaround
     athlete = Athlete.query.one()
-    athlete.update_created_activities_jobs_at.assert_called_once()
-    # Should work: assert athlete.created_activities_jobs_at is not None
+    assert athlete.created_activities_jobs_at is not None

@@ -2,8 +2,11 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from sqlalchemy.orm import Mapped
+
 from app import db
 
+from .athlete import Athlete
 from .mixins.base import BaseModelMixin
 
 
@@ -18,6 +21,11 @@ class ActivityFetchJob(db.Model, BaseModelMixin):  # type: ignore
     )
     activity_strava_id = db.Column(db.BigInteger, nullable=False, index=True)
     done_at = db.Column(db.DateTime)
+
+    athlete: Mapped[Athlete] = db.relationship(
+        "Athlete",
+        backref="activity_fetch_jobs",  # type: ignore
+    )
 
     @property
     def is_done(self):
@@ -35,8 +43,12 @@ class ActivityFetchJob(db.Model, BaseModelMixin):  # type: ignore
         ).add(commit=True)
 
     @classmethod
-    def get_job_to_process(cls) -> ActivityFetchJob | None:
-        return ActivityFetchJob.query.filter(ActivityFetchJob.done_at.is_(None)).first()
+    def get_jobs_to_process(cls, limit: int) -> list[ActivityFetchJob]:
+        return (
+            ActivityFetchJob.query.filter(ActivityFetchJob.done_at.is_(None))
+            .limit(limit)
+            .all()
+        )
 
     @classmethod
     def get_pending_by_strava_id(

@@ -42,6 +42,12 @@
             ".cache",
             "__pycache__",
             "botocore"
+        ],
+        "events": [
+            {
+                "function": "app.zappa_events.consume_activities_fetch_queue",
+                "expression": "rate(15 minute)"
+            }
         ]
     },
     "prod": {
