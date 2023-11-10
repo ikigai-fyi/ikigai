@@ -69,3 +69,17 @@ class ActivityFetchJob(db.Model, BaseModelMixin):  # type: ignore
             ActivityFetchJob.activity_strava_id == activity_strava_id,
             ActivityFetchJob.done_at.is_(None),
         ).first()
+
+    @classmethod
+    def delete_scheduled_jobs(
+        cls,
+        athlete_id: int,
+        activity_strava_id: int,
+    ):
+        ActivityFetchJob.query.filter(
+            ActivityFetchJob.athlete_id == athlete_id,
+            ActivityFetchJob.activity_strava_id == activity_strava_id,
+            ActivityFetchJob.done_at.is_(None),
+            ActivityFetchJob.do_after > datetime.utcnow(),
+        ).delete()
+        db.session.commit()

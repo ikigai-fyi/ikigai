@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from http import HTTPStatus
 
 import faker
@@ -6,6 +6,7 @@ import pytest
 
 from app.models.activity_fetch_job import ActivityFetchJob
 from tests.factory.activity import ActivityFactory
+from tests.factory.activity_fetch_job import ActivityFetchJobFactory
 from tests.factory.athlete import AthleteFactory
 from tests.factory.strava_webhook import (
     StravaWebhookAspectType,
@@ -81,4 +82,55 @@ def test_webhook_update_activity(client, app):
     assert job.activity_strava_id == activity.strava_id
     assert job.athlete_id == athlete.id
     assert job.done_at is None
-    assert job.do_after < datetime.utcnow()
+    assert job.do_after > datetime.utcnow()
+
+
+def test_webhook_delete_scheduled_jobs(client, app):
+    athlete = AthleteFactory()
+
+    # To delete
+    scheduled_job = ActivityFetchJobFactory(
+        activity_strava_id=9024223766,
+        athlete_id=athlete.id,
+        done_at=None,
+        do_after=datetime.utcnow() + timedelta(days=10),
+    )
+
+    # To not delete
+    wrong_activity_job = ActivityFetchJobFactory(
+        activity_strava_id=1,
+        athlete_id=athlete.id,
+        done_at=None,
+        do_after=datetime.utcnow() + timedelta(days=10),
+    )
+    wrong_athlete_job = ActivityFetchJobFactory(
+        activity_strava_id=9024223766,
+        athlete_id=AthleteFactory().id,
+        done_at=None,
+        do_after=datetime.utcnow() + timedelta(days=10),
+    )
+    already_done_job = ActivityFetchJobFactory(
+        activity_strava_id=9024223766,
+        athlete_id=athlete.id,
+        done_at=datetime.utcnow(),
+        do_after=datetime.utcnow(),
+    )
+
+    assert ActivityFetchJob.query.count() == 4  # noqa: PLR2004
+
+    webhook_input = StravaWebhookInputFactory(
+        object_type=StravaWebhookObjectType.ACTIVITY,
+        aspect_type=StravaWebhookAspectType.CREATE,
+        subscription_id=app.config["STRAVA_WEBHOOK_SUBSCRIPTION_ID"],
+        owner_id=athlete.strava_id,
+        object_id=9024223766,
+    )
+    response = client.post("/rest/webhooks/strava", json=webhook_input.dict())
+    assert response.status_code == HTTPStatus.OK
+
+    jobs = ActivityFetchJob.query.all()
+
+    assert scheduled_job not in jobs
+    assert wrong_activity_job in jobs
+    assert wrong_athlete_job in jobs
+    assert already_done_job in jobs
