@@ -55,7 +55,7 @@ def register_sentry(app: Flask):
             AwsLambdaIntegration(timeout_warning=True),
             sentry_logging,
         ],
-        traces_sample_rate=0,
+        traces_sample_rate=0.01,
         environment=app.config.get("APP_ENV"),
     )
 
