@@ -81,7 +81,7 @@ def _get_city(strava_activity: dict) -> str:
     location = geolocator.reverse((lat, lon), exactly_one=True)
     address = location.raw["address"]
 
-    fields_lookup_by_priority = ["city", "village", "town", "state"]
+    fields_lookup_by_priority = ["city", "village", "town", "hamlet", "state"]
     for field in fields_lookup_by_priority:
         if field in address:
             return address[field]
