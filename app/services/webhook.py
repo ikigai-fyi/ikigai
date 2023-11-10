@@ -22,6 +22,11 @@ def handle_strava_webhook(input: StravaWebhookInput):
 
     if input.is_create_activity or input.is_update_activity:
         athlete = Athlete.get_by_strava_id_or_404(input.owner_id)
+
+        # Ignore inactive athlete to preserve Strava API quota
+        if not athlete.is_active:
+            return
+
         ActivityFetchJob.delete_scheduled_jobs(athlete.id, input.object_id)
         ActivityFetchJob.create(
             athlete_id=athlete.id,

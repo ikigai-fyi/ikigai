@@ -19,6 +19,7 @@ class AthleteFactory(factory.alchemy.SQLAlchemyModelFactory):
     last_name = factory.Faker("last_name")
     picture_url = "https://picture.url"
     updated_from_strava_at = datetime.utcnow()
+    last_active_at = datetime.utcnow()
 
     strava_id = factory.Faker("pyint")
     strava_raw: dict = {}

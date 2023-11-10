@@ -134,3 +134,22 @@ def test_webhook_delete_scheduled_jobs(client, app):
     assert wrong_activity_job in jobs
     assert wrong_athlete_job in jobs
     assert already_done_job in jobs
+
+
+@pytest.mark.parametrize(
+    "last_active_at",
+    [None, datetime.utcnow() - timedelta(days=15)],
+)
+def test_webhook_inactive_athlete(client, app, last_active_at):
+    athlete = AthleteFactory(last_active_at=last_active_at)
+    webhook_input = StravaWebhookInputFactory(
+        object_type=StravaWebhookObjectType.ACTIVITY,
+        aspect_type=StravaWebhookAspectType.CREATE,
+        subscription_id=app.config["STRAVA_WEBHOOK_SUBSCRIPTION_ID"],
+        owner_id=athlete.strava_id,
+        object_id=9024223766,
+    )
+    response = client.post("/rest/webhooks/strava", json=webhook_input.dict())
+    assert response.status_code == HTTPStatus.OK
+
+    assert ActivityFetchJob.query.count() == 0
