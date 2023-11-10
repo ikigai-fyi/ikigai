@@ -1,3 +1,5 @@
+from sentry_sdk.crons import monitor
+
 from app.models.activity_fetch_job import ActivityFetchJob
 
 from .task import process_activity_fetch_job_async
@@ -5,6 +7,7 @@ from .task import process_activity_fetch_job_async
 CONSUMPTION_BURST = 5
 
 
+@monitor(monitor_slug="consume-activities-fetch-queue")
 def consume_activities_fetch_queue():
     """We assume this is only called sequentially
     so that the same job cannot be consumed twice in parallel.
