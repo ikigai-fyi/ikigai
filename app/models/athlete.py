@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Mapped
 from stravalib.model import Athlete as StravaAthlete
@@ -12,6 +12,8 @@ from app.utils.error import AthleteNotFoundError
 from .mixins.base import BaseModelMixin
 from .mixins.uuid import UUIDMixin
 from .strava_token import StravaToken
+
+INACTIVE_DELAY_DAYS = 14
 
 
 class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
@@ -46,6 +48,13 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
         "StravaToken",
         backref="athlete",
     )  # type: ignore
+
+    @property
+    def is_active(self):
+        activity_threshold = datetime.utcnow() - timedelta(days=INACTIVE_DELAY_DAYS)
+        return (
+            self.last_active_at is not None and self.last_active_at > activity_threshold
+        )
 
     @classmethod
     def get_by_strava_id_or_404(cls, strava_id: int) -> Athlete:
