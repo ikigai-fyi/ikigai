@@ -30,9 +30,11 @@ def register_extensions(app: Flask):
 
 def register_blueprints(app: Flask):
     """Register blueprints."""
+    from app.admin.views import admin as admin_blueprint
     from app.rest import rest as rest_blueprint
 
     app.register_blueprint(rest_blueprint, url_prefix="/rest")
+    app.register_blueprint(admin_blueprint, url_prefix="/admin")
 
 
 def create_app() -> Flask:
