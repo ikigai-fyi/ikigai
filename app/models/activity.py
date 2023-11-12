@@ -16,7 +16,7 @@ class Activity(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     __tablename__ = "activity"
     __uuid_prefix__ = "act"
 
-    name: Mapped[str] = db.Column(db.String(128), nullable=False)
+    name: Mapped[str] = db.Column(db.String(256), nullable=False)
     sport_type: Mapped[str] = db.Column(db.String(32), nullable=False)
     elapsed_time_in_seconds: Mapped[int] = db.Column(db.Integer, nullable=False)
     start_datetime: Mapped[datetime] = db.Column(db.DateTime, nullable=False)
