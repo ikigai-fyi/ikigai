@@ -5,4 +5,7 @@ admin = Blueprint("admin", __name__)
 
 @admin.get("/dashboard")
 def admin_dashboard():
-    return render_template("admin/dashboard.html")
+    cards = [
+        {"title": "Title", "content": "Value"},
+    ]
+    return render_template("admin/dashboard.html", cards=cards)
