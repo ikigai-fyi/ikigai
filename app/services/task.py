@@ -64,13 +64,22 @@ def create_activities_fetch_jobs_async(athlete_id: int):
 @task
 @with_app_context()
 def process_activity_fetch_job_async(job_id: int):
-    job = ActivityFetchJob.get_by_id(job_id)
+    job: ActivityFetchJob = ActivityFetchJob.get_by_id(job_id)
     if not job:
         return
 
+    sentry_sdk.set_tag("job_id", job.id)
     athlete = Athlete.get_by_id(job.athlete_id)
-    fetch_and_store_activity(job.activity_strava_id, athlete)
-    job.mark_as_done()
+
+    try:
+        fetch_and_store_activity(job.activity_strava_id, athlete)
+        job.mark_as_done()
+    except Exception as e:  # noqa: BLE001
+        sentry_sdk.capture_exception(e)
+
+        job.increase_retry_count()
+        if job.should_cancel:
+            job.cancel()
 
 
 def _should_create_job(activity) -> bool:
