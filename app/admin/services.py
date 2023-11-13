@@ -17,6 +17,7 @@ def get_dashboard_cards() -> list[DashboardCard]:
         _get_totals_athletes_count_card(),
         _get_queue_size_card(),
         _get_queue_done_card(),
+        _get_dead_letter_queue_size_card(),
     ]
 
 
@@ -44,6 +45,7 @@ def _get_totals_athletes_count_card() -> DashboardCard:
 def _get_queue_size_card() -> DashboardCard:
     todo_jobs_count = ActivityFetchJob.query.filter(
         ActivityFetchJob.done_at.is_(None),
+        ActivityFetchJob.canceled_at.is_(None),
     ).count()
     return DashboardCard(title="🔄 Jobs to process", content=str(todo_jobs_count))
 
@@ -53,3 +55,11 @@ def _get_queue_done_card() -> DashboardCard:
         ActivityFetchJob.done_at.is_not(None),
     ).count()
     return DashboardCard(title="✅ Jobs processed", content=str(done_jobs_count))
+
+
+def _get_dead_letter_queue_size_card() -> DashboardCard:
+    canceled_jobs_count = ActivityFetchJob.query.filter(
+        ActivityFetchJob.done_at.is_(None),
+        ActivityFetchJob.canceled_at.is_not(None),
+    ).count()
+    return DashboardCard(title="🛑 Jobs canceled", content=str(canceled_jobs_count))

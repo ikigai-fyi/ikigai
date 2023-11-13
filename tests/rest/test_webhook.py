@@ -63,6 +63,8 @@ def test_webhook_create_activity(client, app):
     assert job.athlete_id == athlete.id
     assert job.done_at is None
     assert job.do_after > datetime.utcnow()
+    assert job.retry_count == 0
+    assert job.canceled_at is None
 
 
 def test_webhook_update_activity(client, app):
@@ -83,6 +85,8 @@ def test_webhook_update_activity(client, app):
     assert job.athlete_id == athlete.id
     assert job.done_at is None
     assert job.do_after > datetime.utcnow()
+    assert job.retry_count == 0
+    assert job.canceled_at is None
 
 
 def test_webhook_delete_scheduled_jobs(client, app):
