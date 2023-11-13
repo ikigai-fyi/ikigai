@@ -30,7 +30,7 @@ class ActivityFetchJob(db.Model, BaseModelMixin):  # type: ignore
         db.Integer,
         nullable=False,
         default=0,
-        server_default=0,
+        server_default="0",
     )
 
     athlete: Mapped[Athlete] = db.relationship(
