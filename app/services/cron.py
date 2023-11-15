@@ -4,7 +4,7 @@ from app.models.activity_fetch_job import ActivityFetchJob
 
 from .task import process_activity_fetch_job_async
 
-CONSUMPTION_BURST = 5
+CONSUMPTION_BURST = 20
 
 
 @monitor(monitor_slug="consume-activities-fetch-queue")
