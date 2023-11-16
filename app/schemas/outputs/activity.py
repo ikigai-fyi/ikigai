@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, root_validator
+from pydantic import BaseModel
 
 
 class ActivityOutput(BaseModel):
@@ -19,11 +19,3 @@ class ActivityOutput(BaseModel):
     polyline: str | None
     distance_in_meters: int | None
     total_elevation_gain_in_meters: int | None
-
-    # Deprecated, remove once app ready
-    picture_urls: list[str] | None
-
-    @root_validator
-    def fill_picture_urls(cls, values) -> dict:  # noqa: N805
-        values["picture_urls"] = [values["picture_url"]]
-        return values
