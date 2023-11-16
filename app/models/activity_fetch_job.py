@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import random
 from datetime import datetime
 
 from sqlalchemy.orm import Mapped
@@ -73,15 +74,21 @@ class ActivityFetchJob(db.Model, BaseModelMixin):  # type: ignore
 
     @classmethod
     def get_jobs_to_process(cls, limit: int) -> list[ActivityFetchJob]:
-        return (
-            ActivityFetchJob.query.filter(
-                ActivityFetchJob.done_at.is_(None),
-                ActivityFetchJob.do_after < datetime.utcnow(),
-                ActivityFetchJob.canceled_at.is_(None),
+        all_ids = [
+            entity[0]
+            for entity in (
+                ActivityFetchJob.query.with_entities(ActivityFetchJob.id)
+                .filter(
+                    ActivityFetchJob.done_at.is_(None),
+                    ActivityFetchJob.do_after < datetime.utcnow(),
+                    ActivityFetchJob.canceled_at.is_(None),
+                )
+                .all()
             )
-            .limit(limit)
-            .all()
-        )
+        ]
+
+        random_ids = random.sample(all_ids, min(limit, len(all_ids)))
+        return ActivityFetchJob.query.filter(ActivityFetchJob.id.in_(random_ids)).all()
 
     @classmethod
     def get_pending_by_strava_id(
