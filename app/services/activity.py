@@ -1,6 +1,8 @@
 import random
+from datetime import date
 
 from geopy.geocoders import Nominatim
+from sqlalchemy import extract
 from stravalib.model import Activity as StravaActivity
 
 from app.models.activity import Activity
@@ -17,7 +19,11 @@ from .client import get_strava_client
 
 
 def pick_activity(athlete: Athlete) -> ActivityPickOutput:
-    athlete.update_last_active_at()
+    if activity := get_x_years_ago_activity(athlete):
+        return ActivityPickOutput(
+            activity=activity,
+            pick_type=PickType.X_YEARS_AGO,
+        )
 
     return ActivityPickOutput(
         activity=get_random_activity(athlete),
@@ -25,9 +31,22 @@ def pick_activity(athlete: Athlete) -> ActivityPickOutput:
     )
 
 
-def get_random_activity(athlete: Athlete) -> ActivityOutput:
-    athlete.update_last_active_at()
+def get_x_years_ago_activity(athlete: Athlete) -> ActivityOutput | None:
+    candidates = Activity.query.filter(
+        Activity.athlete_id == athlete.id,
+        Activity.picture_url.is_not(None),
+        extract("day", Activity.start_datetime) == date.today().day,
+        extract("month", Activity.start_datetime) == date.today().month,
+        extract("year", Activity.start_datetime) < date.today().year,
+    ).all()
+    if not candidates:
+        return None
 
+    activity = random.choice(candidates)
+    return ActivityOutput.from_orm(activity)
+
+
+def get_random_activity(athlete: Athlete) -> ActivityOutput:
     candidates: list[Activity] = Activity.query.filter(
         Activity.athlete_id == athlete.id,
         Activity.picture_url.is_not(None),
