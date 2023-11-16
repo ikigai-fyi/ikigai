@@ -6,6 +6,7 @@ from stravalib.model import Activity as StravaActivity
 from app.models.activity import Activity
 from app.models.athlete import Athlete
 from app.schemas.outputs.activity import ActivityOutput
+from app.schemas.outputs.pick import ActivityPickOutput, PickType
 from app.utils.error import (
     ActivityCityNotFoundError,
     NoActivityError,
@@ -13,6 +14,15 @@ from app.utils.error import (
 )
 
 from .client import get_strava_client
+
+
+def pick_activity(athlete: Athlete) -> ActivityPickOutput:
+    athlete.update_last_active_at()
+
+    return ActivityPickOutput(
+        activity=get_random_activity(athlete),
+        pick_type=PickType.RANDOM,
+    )
 
 
 def get_random_activity(athlete: Athlete) -> ActivityOutput:
