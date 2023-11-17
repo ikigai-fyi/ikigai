@@ -130,3 +130,21 @@ def test_current_activity_is_deterministic(client):
     }
 
     assert len(distinct_ids) == 1
+
+
+def test_current_activity_force_refresh(client):
+    initial_date = datetime.utcnow()
+    athlete = AthleteFactory(current_activity_refreshed_at=initial_date)
+    ActivityFactory.create_batch(size=100, athlete=athlete)
+
+    distinct_ids = set()
+
+    for _ in range(10):
+        distinct_ids.add(
+            client.authenticated(athlete)
+            .get("/rest/activities/current?refresh=true")
+            .json["activity"]["strava_id"],
+        )
+
+    assert len(distinct_ids) > 1
+    assert athlete.current_activity_refreshed_at > initial_date
