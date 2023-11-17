@@ -44,6 +44,7 @@ dev-dependencies = [
     "pytest-cov>=4.1.0",
     "responses>=0.23.3",
     "factory-boy>=3.3.0",
+    "freezegun>=1.2.2",
 ]
 
 [tool.hatch.metadata]

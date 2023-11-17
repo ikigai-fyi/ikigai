@@ -2,7 +2,9 @@ from datetime import datetime, timedelta
 from http import HTTPStatus
 
 import pytest
+from freezegun import freeze_time
 
+from app.models.athlete import REFRESH_FREQUENCY_SECONDS
 from tests.factory.activity import ActivityFactory
 from tests.factory.athlete import AthleteFactory
 
@@ -118,9 +120,9 @@ def test_pick_activity_last_active(client):
     assert athlete.last_active_at is not None
 
 
-def test_current_activity_is_deterministic(client):
+def test_current_activity_should_be_deterministic(client):
     athlete = AthleteFactory()
-    ActivityFactory.create_batch(size=100, athlete=athlete)
+    ActivityFactory.create_batch(size=50, athlete=athlete)
 
     distinct_ids = {
         client.authenticated(athlete)
@@ -132,10 +134,31 @@ def test_current_activity_is_deterministic(client):
     assert len(distinct_ids) == 1
 
 
-def test_current_activity_force_refresh(client):
+def test_current_activity_should_expire(client):
     initial_date = datetime.utcnow()
     athlete = AthleteFactory(current_activity_refreshed_at=initial_date)
-    ActivityFactory.create_batch(size=100, athlete=athlete)
+    ActivityFactory.create_batch(size=50, athlete=athlete)
+
+    first_activity = client.authenticated(athlete).get("/rest/activities/current").json
+    second_activity = client.authenticated(athlete).get("/rest/activities/current").json
+
+    with freeze_time(
+        athlete.current_activity_refreshed_at
+        + timedelta(seconds=REFRESH_FREQUENCY_SECONDS + 1),
+    ):
+        third_activity = (
+            client.authenticated(athlete).get("/rest/activities/current").json
+        )
+
+    assert first_activity == second_activity
+    assert second_activity != third_activity
+    assert athlete.current_activity_refreshed_at > initial_date
+
+
+def test_current_activity_with_force_refresh_should_refresh(client):
+    initial_date = datetime.utcnow()
+    athlete = AthleteFactory(current_activity_refreshed_at=initial_date)
+    ActivityFactory.create_batch(size=50, athlete=athlete)
 
     distinct_ids = set()
 

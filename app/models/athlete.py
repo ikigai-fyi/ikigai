@@ -14,6 +14,7 @@ from .mixins.uuid import UUIDMixin
 from .strava_token import StravaToken
 
 INACTIVE_DELAY_DAYS = 14
+REFRESH_FREQUENCY_SECONDS = 3600 * 1
 
 
 class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
@@ -101,10 +102,9 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
         self.update()
 
     def update_current_activity_refreshed_at(self, *, force_update: bool) -> datetime:
-        refresh_frequency_seconds = 3600 * 1
         last_refresh_delta = datetime.utcnow() - self.current_activity_refreshed_at
 
-        if force_update or last_refresh_delta.seconds > refresh_frequency_seconds:
+        if force_update or last_refresh_delta.seconds > REFRESH_FREQUENCY_SECONDS:
             self.current_activity_refreshed_at = datetime.now()
             self.update()
 
