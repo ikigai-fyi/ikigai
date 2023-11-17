@@ -23,12 +23,18 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     first_name: Mapped[str] = db.Column(db.String(32), nullable=False)
     last_name: Mapped[str] = db.Column(db.String(32), nullable=False)
     picture_url: Mapped[str] = db.Column(db.String(256), nullable=False)
+
     updated_from_strava_at: Mapped[datetime] = db.Column(db.DateTime, nullable=False)
     created_activities_jobs_at: Mapped[datetime | None] = db.Column(
         db.DateTime,
     )
     last_active_at: Mapped[datetime | None] = db.Column(
         db.DateTime,
+    )
+    current_activity_refreshed_at: Mapped[datetime] = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow,
     )
 
     strava_id: Mapped[int] = db.Column(
@@ -93,6 +99,16 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     def update_last_active_at(self):
         self.last_active_at = datetime.utcnow()
         self.update()
+
+    def update_current_activity_refreshed_at(self) -> datetime:
+        refresh_frequency_seconds = 3600 * 1
+        last_refresh_delta = datetime.utcnow() - self.current_activity_refreshed_at
+
+        if last_refresh_delta.seconds > refresh_frequency_seconds:
+            self.current_activity_refreshed_at = datetime.now()
+            self.update()
+
+        return self.current_activity_refreshed_at
 
     def update_strava_token(
         self,

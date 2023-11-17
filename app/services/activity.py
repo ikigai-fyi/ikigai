@@ -18,6 +18,15 @@ from app.utils.error import (
 from .client import get_strava_client
 
 
+def get_current_activity(athlete: Athlete) -> ActivityPickOutput:
+    refreshed_at = athlete.update_current_activity_refreshed_at()
+
+    # Fix the seed to get deterministic result
+    random.seed(refreshed_at.timestamp())
+
+    return pick_activity(athlete)
+
+
 def pick_activity(athlete: Athlete) -> ActivityPickOutput:
     if activity := get_x_years_ago_activity(athlete):
         return ActivityPickOutput(

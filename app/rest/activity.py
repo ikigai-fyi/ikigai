@@ -6,6 +6,7 @@ from app.extensions import spectree
 from app.services.activity import (
     ActivityOutput,
     ActivityPickOutput,
+    get_current_activity,
     get_random_activity,
     pick_activity,
 )
@@ -27,3 +28,11 @@ def ep_get_random_activity():
 def ep_pick_activity():
     current_user.update_last_active_at()
     return jsonify(pick_activity(current_user))
+
+
+@activity.get("/current")
+@spectree.validate(resp=Response(HTTP_200=ActivityPickOutput))
+@jwt_required()
+def ep_get_current_activity():
+    current_user.update_last_active_at()
+    return jsonify(get_current_activity(current_user))

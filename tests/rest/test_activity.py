@@ -116,3 +116,17 @@ def test_pick_activity_last_active(client):
     athlete = AthleteFactory(last_active_at=None)
     client.authenticated(athlete).get("/rest/activities/random")
     assert athlete.last_active_at is not None
+
+
+def test_current_activity_is_deterministic(client):
+    athlete = AthleteFactory()
+    ActivityFactory.create_batch(size=100, athlete=athlete)
+
+    distinct_ids = {
+        client.authenticated(athlete)
+        .get("/rest/activities/current")
+        .json["activity"]["strava_id"]
+        for _ in range(10)
+    }
+
+    assert len(distinct_ids) == 1
