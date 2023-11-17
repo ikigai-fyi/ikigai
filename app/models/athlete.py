@@ -14,6 +14,8 @@ from .mixins.uuid import UUIDMixin
 from .strava_token import StravaToken
 
 INACTIVE_DELAY_DAYS = 14
+
+# FIXME make this a user setting
 REFRESH_FREQUENCY_SECONDS = 3600 * 1
 
 
