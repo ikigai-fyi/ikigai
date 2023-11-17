@@ -23,7 +23,9 @@ def upgrade():
         )
 
     with op.batch_alter_table("athlete", schema=None) as batch_op:
-        batch_op.execute("UPDATE athlete SET current_activity_refreshed_at = NOW();")
+        batch_op.execute(
+            "UPDATE athlete SET current_activity_refreshed_at = created_at;",
+        )
         batch_op.alter_column(
             "current_activity_refreshed_at",
             existing_type=sa.DateTime(),
