@@ -5,6 +5,7 @@ import factory
 from app.models.athlete import Athlete
 
 from . import session_factory
+from .settings import SettingsFactory
 from .strava_token import StravaTokenFactory
 
 
@@ -24,3 +25,5 @@ class AthleteFactory(factory.alchemy.SQLAlchemyModelFactory):
     strava_id = factory.Faker("pyint")
     strava_raw: dict = {}
     strava_token = factory.SubFactory(StravaTokenFactory)
+
+    settings = factory.SubFactory(SettingsFactory)
