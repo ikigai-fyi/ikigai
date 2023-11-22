@@ -5,11 +5,11 @@ from pydantic import BaseModel
 from .activity import ActivityOutput
 
 
-class PickType(str, Enum):
+class MemoryType(str, Enum):
     RANDOM = "random"
     X_YEARS_AGO = "x_years_ago"
 
 
-class ActivityPickOutput(BaseModel):
+class MemoryOutput(BaseModel):
     activity: ActivityOutput
-    pick_type: PickType
+    type: MemoryType

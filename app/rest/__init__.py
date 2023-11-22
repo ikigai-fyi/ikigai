@@ -3,6 +3,7 @@ from flask import Blueprint
 from .activity import activity
 from .athlete import athlete
 from .auth import auth
+from .memory import memory
 from .settings import settings
 from .webhook import webhook
 
@@ -12,6 +13,7 @@ rest.register_blueprint(activity)
 rest.register_blueprint(webhook)
 rest.register_blueprint(athlete)
 rest.register_blueprint(settings)
+rest.register_blueprint(memory)
 
 
 @rest.get("/ping")

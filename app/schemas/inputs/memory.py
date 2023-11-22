@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
 
-class GetCurrentActivityInput(BaseModel):
+class GetCurrentMemoryInput(BaseModel):
     refresh: bool = False
