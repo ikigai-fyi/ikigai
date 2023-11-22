@@ -32,7 +32,7 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     last_active_at: Mapped[datetime | None] = db.Column(
         db.DateTime,
     )
-    current_activity_refreshed_at: Mapped[datetime] = db.Column(
+    memory_refreshed_at: Mapped[datetime] = db.Column(
         db.DateTime,
         nullable=False,
         default=datetime.utcnow,
@@ -113,15 +113,15 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
         self.last_active_at = datetime.utcnow()
         self.update()
 
-    def refresh_current_activity_if_needed(self, *, force_update: bool):
-        last_refresh_delta = datetime.utcnow() - self.current_activity_refreshed_at
+    def refresh_memory_if_needed(self, *, force_update: bool):
+        last_refresh_delta = datetime.utcnow() - self.memory_refreshed_at
         is_current_expired = (
             last_refresh_delta.total_seconds() / 3600
             > self.settings.refresh_period_in_hours
         )
 
         if force_update or is_current_expired:
-            self.current_activity_refreshed_at = datetime.now()
+            self.memory_refreshed_at = datetime.now()
             self.update()
 
     def update_strava_token(

@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 from http import HTTPStatus
 
 import pytest
-from freezegun import freeze_time
 
 from tests.factory.activity import ActivityFactory
 from tests.factory.athlete import AthleteFactory
@@ -66,7 +65,7 @@ def test_pick_activity_random(client):
             "total_elevation_gain_in_meters": activity.total_elevation_gain_in_meters,
             "strava_id": str(activity.strava_id),
         },
-        "pick_type": "random",
+        "type": "random",
     }
 
 
@@ -109,7 +108,7 @@ def test_pick_activity_x_years_ago(client, x_years):
             "total_elevation_gain_in_meters": activity.total_elevation_gain_in_meters,
             "strava_id": str(activity.strava_id),
         },
-        "pick_type": "x_years_ago",
+        "type": "x_years_ago",
     }
 
 
@@ -117,56 +116,3 @@ def test_pick_activity_last_active(client):
     athlete = AthleteFactory(last_active_at=None)
     client.authenticated(athlete).get("/rest/activities/random")
     assert athlete.last_active_at is not None
-
-
-def test_current_activity_should_be_deterministic(client):
-    athlete = AthleteFactory()
-    ActivityFactory.create_batch(size=50, athlete=athlete)
-
-    distinct_ids = {
-        client.authenticated(athlete)
-        .get("/rest/activities/current")
-        .json["activity"]["strava_id"]
-        for _ in range(10)
-    }
-
-    assert len(distinct_ids) == 1
-
-
-def test_current_activity_should_expire(client):
-    initial_date = datetime.utcnow()
-    athlete = AthleteFactory(current_activity_refreshed_at=initial_date)
-    ActivityFactory.create_batch(size=50, athlete=athlete)
-
-    first_activity = client.authenticated(athlete).get("/rest/activities/current").json
-    second_activity = client.authenticated(athlete).get("/rest/activities/current").json
-
-    with freeze_time(
-        athlete.current_activity_refreshed_at
-        + timedelta(hours=athlete.settings.refresh_period_in_hours + 1),
-    ):
-        third_activity = (
-            client.authenticated(athlete).get("/rest/activities/current").json
-        )
-
-    assert first_activity == second_activity
-    assert second_activity != third_activity
-    assert athlete.current_activity_refreshed_at > initial_date
-
-
-def test_current_activity_with_force_refresh_should_refresh(client):
-    initial_date = datetime.utcnow()
-    athlete = AthleteFactory(current_activity_refreshed_at=initial_date)
-    ActivityFactory.create_batch(size=50, athlete=athlete)
-
-    distinct_ids = set()
-
-    for _ in range(10):
-        distinct_ids.add(
-            client.authenticated(athlete)
-            .get("/rest/activities/current?refresh=true")
-            .json["activity"]["strava_id"],
-        )
-
-    assert len(distinct_ids) > 1
-    assert athlete.current_activity_refreshed_at > initial_date

@@ -7,9 +7,8 @@ from stravalib.model import Activity as StravaActivity
 
 from app.models.activity import Activity
 from app.models.athlete import Athlete
-from app.schemas.inputs.activity import GetCurrentActivityInput
 from app.schemas.outputs.activity import ActivityOutput
-from app.schemas.outputs.pick import ActivityPickOutput, PickType
+from app.schemas.outputs.memory import MemoryOutput, MemoryType
 from app.utils.error import (
     ActivityCityNotFoundError,
     NoActivityError,
@@ -19,31 +18,16 @@ from app.utils.error import (
 from .client import get_strava_client
 
 
-def get_current_activity(
-    athlete: Athlete,
-    input: GetCurrentActivityInput,
-) -> ActivityPickOutput:
-    athlete.refresh_current_activity_if_needed(
-        force_update=input.refresh,
-    )
-    refreshed_at = athlete.current_activity_refreshed_at
-
-    # Fix the seed to get deterministic result
-    random.seed(refreshed_at.timestamp())
-
-    return pick_activity(athlete)
-
-
-def pick_activity(athlete: Athlete) -> ActivityPickOutput:
+def pick_activity(athlete: Athlete) -> MemoryOutput:
     if activity := get_x_years_ago_activity(athlete):
-        return ActivityPickOutput(
+        return MemoryOutput(
             activity=activity,
-            pick_type=PickType.X_YEARS_AGO,
+            type=MemoryType.X_YEARS_AGO,
         )
 
-    return ActivityPickOutput(
+    return MemoryOutput(
         activity=get_random_activity(athlete),
-        pick_type=PickType.RANDOM,
+        type=MemoryType.RANDOM,
     )
 
 
