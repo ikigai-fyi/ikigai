@@ -47,14 +47,14 @@ def test_get_memory_should_be_deterministic(client):
 
 def test_get_memory_should_expire(client):
     initial_date = datetime.utcnow()
-    athlete = AthleteFactory(current_activity_refreshed_at=initial_date)
+    athlete = AthleteFactory(memory_refreshed_at=initial_date)
     ActivityFactory.create_batch(size=50, athlete=athlete)
 
     first_activity = client.authenticated(athlete).get("/rest/memories/current").json
     second_activity = client.authenticated(athlete).get("/rest/memories/current").json
 
     with freeze_time(
-        athlete.current_activity_refreshed_at
+        athlete.memory_refreshed_at
         + timedelta(hours=athlete.settings.refresh_period_in_hours + 1),
     ):
         third_activity = (
@@ -63,12 +63,12 @@ def test_get_memory_should_expire(client):
 
     assert first_activity == second_activity
     assert second_activity != third_activity
-    assert athlete.current_activity_refreshed_at > initial_date
+    assert athlete.memory_refreshed_at > initial_date
 
 
 def test_get_memory_with_force_refresh_should_refresh(client):
     initial_date = datetime.utcnow()
-    athlete = AthleteFactory(current_activity_refreshed_at=initial_date)
+    athlete = AthleteFactory(memory_refreshed_at=initial_date)
     ActivityFactory.create_batch(size=50, athlete=athlete)
 
     distinct_ids = set()
@@ -81,4 +81,4 @@ def test_get_memory_with_force_refresh_should_refresh(client):
         )
 
     assert len(distinct_ids) > 1
-    assert athlete.current_activity_refreshed_at > initial_date
+    assert athlete.memory_refreshed_at > initial_date

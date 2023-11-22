@@ -11,12 +11,11 @@ def get_current_memory(
     athlete: Athlete,
     input: GetCurrentMemoryInput,
 ) -> MemoryOutput:
-    athlete.refresh_current_activity_if_needed(
+    athlete.refresh_memory_if_needed(
         force_update=input.refresh,
     )
-    refreshed_at = athlete.current_activity_refreshed_at
 
     # Fix the seed to get deterministic result
-    random.seed(refreshed_at.timestamp())
+    random.seed(athlete.memory_refreshed_at.timestamp())
 
     return pick_activity(athlete)
