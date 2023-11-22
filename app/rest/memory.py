@@ -16,6 +16,6 @@ memory = Blueprint("memory", __name__, url_prefix="/memories")
     resp=Response(HTTP_200=MemoryOutput),
 )
 @jwt_required()
-def ep_get_current_activity(query: GetCurrentMemoryInput):
+def ep_get_current_memory(query: GetCurrentMemoryInput):
     current_user.update_last_active_at()
     return jsonify(get_current_memory(current_user, query))
