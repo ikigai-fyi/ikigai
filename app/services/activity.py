@@ -23,9 +23,10 @@ def get_current_activity(
     athlete: Athlete,
     input: GetCurrentActivityInput,
 ) -> ActivityPickOutput:
-    refreshed_at = athlete.update_current_activity_refreshed_at(
+    athlete.refresh_current_activity_if_needed(
         force_update=input.refresh,
     )
+    refreshed_at = athlete.current_activity_refreshed_at
 
     # Fix the seed to get deterministic result
     random.seed(refreshed_at.timestamp())

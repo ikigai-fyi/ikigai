@@ -4,7 +4,6 @@ from http import HTTPStatus
 import pytest
 from freezegun import freeze_time
 
-from app.models.athlete import REFRESH_FREQUENCY_SECONDS
 from tests.factory.activity import ActivityFactory
 from tests.factory.athlete import AthleteFactory
 
@@ -144,7 +143,7 @@ def test_current_activity_should_expire(client):
 
     with freeze_time(
         athlete.current_activity_refreshed_at
-        + timedelta(seconds=REFRESH_FREQUENCY_SECONDS + 1),
+        + timedelta(hours=athlete.settings.refresh_period_in_hours + 1),
     ):
         third_activity = (
             client.authenticated(athlete).get("/rest/activities/current").json
