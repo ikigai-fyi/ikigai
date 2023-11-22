@@ -52,7 +52,7 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     strava_token_id: Mapped[int] = db.Column(
         db.Integer,
         db.ForeignKey("strava_token.id"),
-        index=True,
+        unique=True,
     )
     strava_token: Mapped[StravaToken] = db.relationship(
         "StravaToken",
@@ -62,8 +62,8 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     settings_id: Mapped[int] = db.Column(
         db.Integer,
         db.ForeignKey("settings.id"),
-        nullable=True,
-        index=True,
+        nullable=False,
+        unique=True,
     )
     settings: Mapped[Settings] = db.relationship(
         "Settings",
