@@ -15,6 +15,9 @@ from .strava_token import StravaToken
 
 INACTIVE_DELAY_DAYS = 14
 
+# FIXME make this a user setting
+REFRESH_FREQUENCY_SECONDS = 3600 * 1
+
 
 class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     __tablename__ = "athlete"
@@ -23,12 +26,18 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     first_name: Mapped[str] = db.Column(db.String(32), nullable=False)
     last_name: Mapped[str] = db.Column(db.String(32), nullable=False)
     picture_url: Mapped[str] = db.Column(db.String(256), nullable=False)
+
     updated_from_strava_at: Mapped[datetime] = db.Column(db.DateTime, nullable=False)
     created_activities_jobs_at: Mapped[datetime | None] = db.Column(
         db.DateTime,
     )
     last_active_at: Mapped[datetime | None] = db.Column(
         db.DateTime,
+    )
+    current_activity_refreshed_at: Mapped[datetime] = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow,
     )
 
     strava_id: Mapped[int] = db.Column(
@@ -93,6 +102,15 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     def update_last_active_at(self):
         self.last_active_at = datetime.utcnow()
         self.update()
+
+    def update_current_activity_refreshed_at(self, *, force_update: bool) -> datetime:
+        last_refresh_delta = datetime.utcnow() - self.current_activity_refreshed_at
+
+        if force_update or last_refresh_delta.seconds > REFRESH_FREQUENCY_SECONDS:
+            self.current_activity_refreshed_at = datetime.now()
+            self.update()
+
+        return self.current_activity_refreshed_at
 
     def update_strava_token(
         self,

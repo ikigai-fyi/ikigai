@@ -25,7 +25,7 @@ class ActivityFactory(factory.alchemy.SQLAlchemyModelFactory):
     total_elevation_gain_in_meters = factory.Faker("pyint")
     polyline = factory.Faker("pystr")
 
-    strava_id = factory.Faker("pyint")
+    strava_id = factory.Sequence(lambda x: x)
     strava_raw: dict = {}
 
     athlete = factory.SubFactory(AthleteFactory)
