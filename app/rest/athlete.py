@@ -10,7 +10,7 @@ athlete = Blueprint("athlete", __name__, url_prefix="/athletes")
 
 @athlete.post("/<string:uuid>/fetch_activities_async")
 @spectree.validate(resp=Response("HTTP_200"))
-def ep_get_random_activity(uuid: str):
+def ep_launch_fetch_activities_async(uuid: str):
     athlete = Athlete.get_by_uuid(uuid)
     create_activities_fetch_jobs_async(athlete.id)
     return "ok"
