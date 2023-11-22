@@ -11,6 +11,7 @@ from app.utils.error import AthleteNotFoundError
 
 from .mixins.base import BaseModelMixin
 from .mixins.uuid import UUIDMixin
+from .settings import Settings
 from .strava_token import StravaToken
 
 INACTIVE_DELAY_DAYS = 14
@@ -47,14 +48,25 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
         unique=True,
     )
     strava_raw: Mapped[dict] = db.Column(db.JSON(), nullable=False)
+
     strava_token_id: Mapped[int] = db.Column(
         db.Integer,
         db.ForeignKey("strava_token.id"),
         index=True,
     )
-
     strava_token: Mapped[StravaToken] = db.relationship(
         "StravaToken",
+        backref="athlete",
+    )  # type: ignore
+
+    settings_id: Mapped[int] = db.Column(
+        db.Integer,
+        db.ForeignKey("settings.id"),
+        nullable=True,
+        index=True,
+    )
+    settings: Mapped[Settings] = db.relationship(
+        "Settings",
         backref="athlete",
     )  # type: ignore
 
@@ -82,6 +94,7 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
         created = False
         if not athlete:
             athlete = Athlete()
+            athlete.settings = Settings().add()
             created = True
 
         athlete.first_name = strava_athlete.firstname
