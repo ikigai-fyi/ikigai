@@ -7,6 +7,7 @@ class StravaLoginOutput(BaseModel):
             orm_mode = True
 
         uuid: str
+        email: str | None
         first_name: str
         last_name: str
         picture_url: str
