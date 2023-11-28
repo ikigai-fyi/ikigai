@@ -35,6 +35,7 @@ def test_strava_login(client):
         "jwt": ANY,
         "athlete": {
             "uuid": ANY,
+            "email": None,
             "first_name": "Firstname",
             "last_name": "Lastname",
             "picture_url": "picture_url",
