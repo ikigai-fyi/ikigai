@@ -21,7 +21,7 @@ class Athlete(db.Model, BaseModelMixin, UUIDMixin):  # type: ignore
     __tablename__ = "athlete"
     __uuid_prefix__ = "ath"
 
-    email: Mapped[str | None] = db.Column(db.String(128))
+    email: Mapped[str | None] = db.Column(db.String(128), unique=True)
     first_name: Mapped[str] = db.Column(db.String(32), nullable=False)
     last_name: Mapped[str] = db.Column(db.String(32), nullable=False)
     picture_url: Mapped[str] = db.Column(db.String(256), nullable=False)
