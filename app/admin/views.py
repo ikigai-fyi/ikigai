@@ -12,4 +12,4 @@ def admin_dashboard():
 
 @admin.get("/metrics")
 def ep_get_metrics():
-    return jsonify(get_dashboard_cards())
+    return jsonify({"metrics": get_dashboard_cards()})
