@@ -1,3 +1,4 @@
+import sentry_sdk
 from flask import current_app
 from flask_jwt_extended import create_access_token
 from stravalib import Client
@@ -34,7 +35,12 @@ def login_with_strava(input: StravaLoginInput) -> StravaLoginOutput:
     )
 
     if created:
-        get_and_store_random_activity_from_strava(athlete)
+        try:
+            get_and_store_random_activity_from_strava(athlete)
+        except Exception as e:  # noqa: BLE001
+            # Don't crash login if fetching the initial activity fails for any reason
+            sentry_sdk.capture_exception(e)
+
         create_activities_fetch_jobs_async(athlete.id)
         send_welcome_message_async(athlete.id)
 
