@@ -24,7 +24,7 @@
         },
         "vpc_config": {
             "SubnetIds": [
-                "subnet-0b4703c2ee0b2e84c"
+                "subnet-03d4e237bd85362a8"
             ],
             "SecurityGroupIds": [
                 "sg-0cac7f374f9c3aa4f"
@@ -76,7 +76,7 @@
         },
         "vpc_config": {
             "SubnetIds": [
-                "subnet-0b4703c2ee0b2e84c"
+                "subnet-03d4e237bd85362a8"
             ],
             "SecurityGroupIds": [
                 "sg-0cac7f374f9c3aa4f"
