@@ -72,9 +72,9 @@ jobs:
           ssh-keyscan -H ec2-18-201-92-197.eu-west-1.compute.amazonaws.com >> ~/.ssh/known_hosts
           eval `ssh-agent -s`
           ssh-add - <<< "${{secrets.BASTION_SSH_PEM}}"
-          echo "*:5432:${{ secrets.DATABASE_HOST }}:5432"
-          ssh -fN -v -L "*:5432:${{ secrets.DATABASE_HOST }}:5432" ec2-user@ec2-18-201-92-197.eu-west-1.compute.amazonaws.com
-          flask db upgrade head
+          ssh -fN -v -L "5432:${{ secrets.DATABASE_HOST }}:5432" ec2-user@ec2-18-201-92-197.eu-west-1.compute.amazonaws.com
+          LOCAL_SQLALCHEMY_DATABASE_URI=$(echo $SQLALCHEMY_DATABASE_URI | sed "s/${{ secrets.DATABASE_HOST }}/127.0.0.1/")
+          SQLALCHEMY_DATABASE_URI=$LOCAL_SQLALCHEMY_DATABASE_URI flask db upgrade head
       - name: Update Zappa deployment
         run: |
           source .venv/bin/activate
