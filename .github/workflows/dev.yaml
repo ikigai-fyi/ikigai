@@ -72,7 +72,8 @@ jobs:
           ssh-keyscan -H ec2-18-201-92-197.eu-west-1.compute.amazonaws.com >> ~/.ssh/known_hosts
           eval `ssh-agent -s`
           ssh-add - <<< "${{secrets.BASTION_SSH_PEM}}"
-          ssh -fN -v -L "5432:${{ secrets.DATABASE_HOST }}:5432" ec2-user@ec2-18-201-92-197.eu-west-1.compute.amazonaws.com
+          echo "*:5432:${{ secrets.DATABASE_HOST }}:5432"
+          ssh -fN -v -L "*:5432:${{ secrets.DATABASE_HOST }}:5432" ec2-user@ec2-18-201-92-197.eu-west-1.compute.amazonaws.com
           flask db upgrade head
       - name: Update Zappa deployment
         run: |
