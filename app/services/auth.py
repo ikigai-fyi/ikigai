@@ -16,23 +16,31 @@ from app.services.task import (
 def login_with_strava(input: StravaLoginInput) -> StravaLoginOutput:
     client = Client()
 
+    current_app.logger.info(1)
+
     response = client.exchange_code_for_token(
         client_id=current_app.config["STRAVA_CLIENT_ID"],
         client_secret=current_app.config["STRAVA_CLIENT_SECRET"],
         code=input.code,
     )
 
+    current_app.logger.info(2)
+
     access_token = response["access_token"]
     client.access_token = access_token
     strava_athlete = client.get_athlete()
 
+    current_app.logger.info(3)
+
     athlete, created = Athlete.update_or_create(strava_athlete)
+    current_app.logger.info(4)
     athlete.update_strava_token(
         access_token,
         response["expires_at"],
         response["refresh_token"],
         input.scope,
     )
+    current_app.logger.info(5)
 
     if created:
         try:
@@ -44,6 +52,7 @@ def login_with_strava(input: StravaLoginInput) -> StravaLoginOutput:
         create_activities_fetch_jobs_async(athlete.id)
         send_welcome_message_async(athlete.id)
 
+    current_app.logger.info(6)
     return StravaLoginOutput(
         athlete=StravaLoginOutput.Athlete.from_orm(athlete),
         jwt=create_access_token(identity=athlete),
