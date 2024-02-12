@@ -2,6 +2,7 @@ import os
 import random
 from datetime import datetime
 from functools import wraps
+from typing import cast
 from urllib.parse import urljoin
 
 import requests
@@ -46,7 +47,7 @@ def create_activities_fetch_jobs_async(athlete_id: int):
     jobs = [
         ActivityFetchJob.create(
             athlete_id=athlete.id,
-            activity_strava_id=activity.id,
+            activity_strava_id=cast(int, activity.id),
             do_after=datetime.utcnow(),
         )
         for activity in activities_iterator

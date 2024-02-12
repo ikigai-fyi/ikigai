@@ -1,5 +1,6 @@
 import random
 from datetime import date
+from typing import cast
 
 from geopy.geocoders import Nominatim
 from sqlalchemy import extract
@@ -60,7 +61,8 @@ def get_random_activity(athlete: Athlete) -> ActivityOutput:
 
 def get_and_store_random_activity_from_strava(athlete: Athlete) -> ActivityOutput:
     strava_activity = get_random_activity_from_strava(athlete)
-    activity = fetch_and_store_activity(strava_activity.id, athlete)
+    activity_id = cast(int, strava_activity.id)
+    activity = fetch_and_store_activity(activity_id, athlete)
     return ActivityOutput.from_orm(activity)
 
 
